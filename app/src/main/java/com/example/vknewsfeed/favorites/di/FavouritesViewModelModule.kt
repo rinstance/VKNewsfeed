@@ -1,0 +1,33 @@
+package com.example.vknewsfeed.favorites.di
+
+import androidx.lifecycle.ViewModelProvider
+import com.example.domain.PostInteractor
+import com.example.vknewsfeed.MainViewModel
+import com.example.vknewsfeed.di.ViewModelKey
+import com.example.vknewsfeed.di.ViewModelModule
+import com.example.vknewsfeed.favorites.FavouritesFragment
+import com.example.vknewsfeed.favorites.FavouritesViewModel
+import dagger.Module
+import dagger.Provides
+import dagger.multibindings.IntoMap
+
+@Module(includes = [ViewModelModule::class])
+class FavouritesViewModelModule {
+
+    @Provides
+    @IntoMap
+    @ViewModelKey(FavouritesViewModel::class)
+    fun provideFavouritesViewModel(postInteractor: PostInteractor): MainViewModel =
+        FavouritesViewModel(postInteractor)
+
+    @Provides
+    fun provideViewModelCreator(
+        fragment: FavouritesFragment,
+        viewModelFactory: ViewModelProvider.Factory
+    ): FavouritesViewModel {
+        return ViewModelProvider(
+            fragment.requireActivity(),
+            viewModelFactory
+        ).get(FavouritesViewModel::class.java)
+    }
+}

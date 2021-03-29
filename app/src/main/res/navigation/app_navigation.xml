@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/newsfeedFragment">
+
+    <fragment
+        android:id="@+id/newsfeedFragment"
+        android:name="com.example.vknewsfeed.newsfeed.NewsfeedFragment"
+        android:label="fragment_newsfeed"
+        tools:layout="@layout/fragment_newsfeed">
+        <action
+            android:id="@+id/action_to_detail_post"
+            app:destination="@id/detailPostFragment"
+            app:popEnterAnim="@animator/from_left_enter"
+            app:popExitAnim="@animator/from_left_exit"
+            app:enterAnim="@animator/enter"
+            app:exitAnim="@animator/exit" />
+        <action
+            android:id="@+id/action_to_auth_activity"
+            app:destination="@id/authorizationActivity" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailPostFragment"
+        android:name="com.example.vknewsfeed.detail.DetailPostFragment"
+        android:label="fragment_detail_post"
+        tools:layout="@layout/fragment_detail_post" />
+
+    <fragment
+        android:id="@+id/favouritesFragment"
+        android:name="com.example.vknewsfeed.favorites.FavouritesFragment"
+        android:label="fragment_favourites"
+        tools:layout="@layout/fragment_favourites" />
+    <activity
+        android:id="@+id/authorizationActivity"
+        android:name="com.example.vknewsfeed.activities.AuthorizationActivity"
+        android:label="activity_authorization"
+        tools:layout="@layout/activity_authorization" />
+
+</navigation>
