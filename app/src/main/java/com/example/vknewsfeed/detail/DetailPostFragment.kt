@@ -14,8 +14,8 @@ import com.example.domain.models.api.Post
 import com.example.domain.models.api.StartPostLike
 import com.example.vknewsfeed.App
 import com.example.vknewsfeed.R
-import com.example.vknewsfeed.adapters.grid.GridImagesAdapter
-import com.example.vknewsfeed.adapters.grid.GridVideosAdapter
+import com.example.vknewsfeed.newsfeed.adapters.grid.GridImagesAdapter
+import com.example.vknewsfeed.newsfeed.adapters.grid.GridVideosAdapter
 import com.example.vknewsfeed.fragments.ProgressDialogFragment
 import com.example.vknewsfeed.helpers.*
 import kotlinx.android.synthetic.main.custom_toolbar.*
@@ -91,9 +91,7 @@ class DetailPostFragment : Fragment(), CoroutineScope {
     private fun setLikeView(itemLike: StartPostLike) {
         detail_like_text.apply {
             text = itemLike.count.toString()
-            setCompoundDrawablesWithIntrinsicBounds(
-                0, 0, R.drawable.like_image_states, 0
-            )
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.like_image_states, 0)
             compoundDrawables[2].level = itemLike.userLikes
         }
     }
@@ -118,23 +116,25 @@ class DetailPostFragment : Fragment(), CoroutineScope {
 
     private suspend fun getVideos() {
         post.attachments?.forEach {
-            if (it.type == Constants.ATTACHMENTS_VIDEO_TYPE)
-                it.video = model.getVideo(it.video)
+            if (it.type == Constants.ATTACHMENTS_VIDEO_TYPE) {
+                model.getVideo(post, it)
+            }
         }
     }
 
     private fun setAdapters(attachments: List<Attachment>?) {
         val photoAttachments: MutableList<String> = ArrayList()
         val videoAttachments: MutableList<String> = ArrayList()
-        attachments?.forEach {
-            if (it.type == Constants.ATTACHMENTS_PHOTO_TYPE)
-                photoAttachments.add(it.photo.getMaxSizeUrl())
-            if (it.type == Constants.ATTACHMENTS_VIDEO_TYPE) {
-                videoAttachments.add(it.video.url)
+        if (attachments != null) {
+            attachments.forEach {
+                if (it.type == Constants.ATTACHMENTS_PHOTO_TYPE)
+                    photoAttachments.add(it.photo.getMaxSizeUrl())
+                if (it.type == Constants.ATTACHMENTS_VIDEO_TYPE)
+                    videoAttachments.add(it.video.url)
             }
+            gridview_images.adapter = GridImagesAdapter(photoAttachments)
+            gridview_videos.adapter = GridVideosAdapter(videoAttachments)
         }
-        gridview_images.adapter = GridImagesAdapter(photoAttachments)
-        gridview_videos.adapter = GridVideosAdapter(videoAttachments)
     }
 
     private fun onBackPressed() = requireActivity().onBackPressed()

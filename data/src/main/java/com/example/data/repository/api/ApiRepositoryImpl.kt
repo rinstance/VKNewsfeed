@@ -1,5 +1,6 @@
 package com.example.data.repository.api
 
+import android.util.Log
 import com.example.data.helpers.Constants
 import com.example.data.network.VKApi
 import com.example.data.network.models.video.ResponseVideo
@@ -43,12 +44,16 @@ class ApiRepositoryImpl(
     private suspend fun getVideoByIdRequest(videoId: String): ResponseVideo =
         vkApi.getVideoById(videoId)
 
-    override suspend fun getVideoById(videoId: String): Video {
+    override suspend fun getVideoById(videoId: String): Video? {
         val video = getVideoByIdRequest(videoId)
         return if (video.response == null) {
             delay(requestDelayMillis)
             getVideoById(videoId)
-        } else video.response.items[0]
+        } else {
+            if (video.response.items.isNotEmpty())
+                return video.response.items[0]
+            else return null
+        }
     }
 
     override suspend fun getNewsfeed(requestedLoadSize: Int): Newsfeed {

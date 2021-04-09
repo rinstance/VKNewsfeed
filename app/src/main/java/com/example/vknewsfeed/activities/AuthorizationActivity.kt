@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.TextView
@@ -36,6 +37,7 @@ class AuthorizationActivity : AppCompatActivity() {
 
     private fun setToolbar() {
         (toolbar_title as TextView).setText(R.string.TOOLBAR_TITLE_AUTH)
+        action_back.visibility = View.GONE
     }
 
     inner class VKAuthWebViewClient : WebViewClient() {

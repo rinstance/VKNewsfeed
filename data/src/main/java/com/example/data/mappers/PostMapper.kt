@@ -9,17 +9,17 @@ import com.example.domain.models.api.Photo
 import com.example.domain.models.db.PostLocal
 import com.example.domain.models.api.Post
 import com.example.domain.models.api.Video
-import com.example.domain.models.db.AttachmentLocal
 import kotlin.collections.ArrayList
 
 fun mapPostToPostLocal(post: Post): PostLocal {
     return with(post) {
         PostLocal(
             postId,
+            sourceId,
             text,
             getFormatDate(date),
             getAuthorPostName(),
-            attachments?.map { mapAttachToAttachLocal(it) }
+            postAuthor.photo50
         )
     }
 }
@@ -32,15 +32,6 @@ fun mapAttachToString(attachment: Attachment): String {
         else if (it == Constants.ATTACHMENTS_VIDEO_TYPE)
             result += attachment.video.url
         return result
-    }
-}
-
-fun mapAttachToAttachLocal(attachment: Attachment): AttachmentLocal {
-    return with(attachment) {
-        AttachmentLocal(
-            type,
-            mapAttachToUrl(attachment)
-        )
     }
 }
 

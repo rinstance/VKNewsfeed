@@ -4,9 +4,9 @@ import androidx.paging.PagedList
 import com.example.data.helpers.Constants
 import com.example.domain.PostInteractor
 import com.example.domain.models.api.Post
-import com.example.vknewsfeed.adapters.newsfeed.ItemDiffUtilCallback
-import com.example.vknewsfeed.adapters.newsfeed.NewsfeedAdapter
-import com.example.vknewsfeed.adapters.newsfeed.NewsfeedPageKeyedDataSource
+import com.example.vknewsfeed.newsfeed.adapters.newsfeed.PostDiffUtilCallback
+import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedAdapter
+import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedPageKeyedDataSource
 import com.example.vknewsfeed.helpers.MainThreadExecutor
 import dagger.Module
 import dagger.Provides
@@ -17,14 +17,15 @@ import javax.inject.Named
 class NewsfeedAdapterModule {
 
     @Provides
-    fun getDiffUtil(): ItemDiffUtilCallback = ItemDiffUtilCallback()
+    fun getDiffUtil(): PostDiffUtilCallback = PostDiffUtilCallback()
 
     @Provides
     fun getAdapter(
         @Named("itemClick") itemClick: (Post) -> Unit,
         @Named("likeAction") likeAction: (Post) -> Unit,
-        callback: ItemDiffUtilCallback
-    ): NewsfeedAdapter = NewsfeedAdapter(callback, itemClick, likeAction)
+        @Named("longClick") longClick: (Post) -> Unit,
+        callback: PostDiffUtilCallback
+    ): NewsfeedAdapter = NewsfeedAdapter(callback, itemClick, likeAction, longClick)
 
     @Provides
     fun getConfig(): PagedList.Config = PagedList.Config.Builder()

@@ -6,6 +6,7 @@ import com.example.data.di.AppModule
 import com.example.data.di.DatabaseModule
 import com.example.data.di.RepositoryModule
 import com.example.vknewsfeed.detail.di.DetailComponent
+import com.example.vknewsfeed.favorites.di.FavouritesComponent
 import com.example.vknewsfeed.newsfeed.di.NewsfeedComponent
 import dagger.BindsInstance
 import dagger.Component
@@ -32,4 +33,5 @@ interface AppComponent {
 
     fun newsComponentFactory(): NewsfeedComponent.Factory
     fun detailComponentFactory(): DetailComponent.Factory
+    fun favouritesComponentFactory(): FavouritesComponent.Factory
 }

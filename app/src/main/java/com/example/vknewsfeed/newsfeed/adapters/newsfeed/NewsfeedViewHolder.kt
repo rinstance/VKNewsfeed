@@ -1,4 +1,4 @@
-package com.example.vknewsfeed.adapters.newsfeed
+package com.example.vknewsfeed.newsfeed.adapters.newsfeed
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +12,8 @@ import kotlinx.android.synthetic.main.newsfeed_item.*
 class NewsfeedViewHolder(
     override val containerView: View,
     private val itemClick: (Post) -> Unit,
-    private val likeAction: (Post) -> Unit
+    private val likeAction: (Post) -> Unit,
+    private val longClick: (Post) -> Unit
 ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
     private val imageHelper: ImageHelper = ImageHelper()
 
@@ -42,5 +43,9 @@ class NewsfeedViewHolder(
     private fun setItemClickListeners(post: Post) {
         like_button.setOnClickListener { likeAction(post) }
         itemView.setOnClickListener { itemClick(post) }
+        itemView.setOnLongClickListener {
+            longClick(post)
+            true
+        }
     }
 }

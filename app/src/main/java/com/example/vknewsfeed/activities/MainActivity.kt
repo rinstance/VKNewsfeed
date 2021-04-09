@@ -3,17 +3,19 @@ package com.example.vknewsfeed.activities
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.data.helpers.Constants
 import com.example.vknewsfeed.R
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.vknewsfeed.fragments.ProgressDialogFragment
+import com.example.vknewsfeed.routers.AppRouter
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AppRouter {
+    private lateinit var progressDialog: ProgressDialogFragment
     lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,4 +55,7 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.fragment_host)
         bottom_nav_view.setupWithNavController(navController)
     }
+
+    override fun showToast(textId: Int) =
+        Toast.makeText(this, textId, Toast.LENGTH_SHORT).show()
 }

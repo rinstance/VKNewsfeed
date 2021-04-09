@@ -41,10 +41,11 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     //room
-    def roomVersion = "2.2.5"
+    def roomVersion = "2.2.6"
     api "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
+    implementation "android.arch.persistence.room:rxjava2:1.1.1"
 
     //retrofit
     def retrofitVersion = "2.9.0"

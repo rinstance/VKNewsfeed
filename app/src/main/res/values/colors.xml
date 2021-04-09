@@ -6,5 +6,7 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorLoading">#EEEDF3</color>
     <color name="colorTextGrey">#414042</color>
+    <color name="colorTextRed">#CD1F1F</color>
     <color name="colorSplashBackground">#9d46ff</color>
+    <color name="colorTextGreen" >#65B780</color>
 </resources>

@@ -2,22 +2,26 @@ package com.example.data.repository.db
 
 import androidx.room.*
 import com.example.domain.models.db.PostLocal
+import io.reactivex.Completable
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PostDao {
     @Query("SELECT * FROM postLocal")
-    fun getAll(): List<PostLocal>
+    fun getAll(): Flow<List<PostLocal>>
 
     @Query("SELECT * FROM postLocal WHERE id = :id")
-    fun getById(id: Int): PostLocal
+    fun getById(id: Int): Flow<PostLocal>
 
-    @Insert
-    fun insert(post: PostLocal)
+    @Query("DELETE FROM postlocal")
+    fun deleteAll()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPost(post: PostLocal)
 
     @Update
-    fun update(post: PostLocal)
+    fun updatePost(post: PostLocal)
 
     @Delete
-    fun delete(post: PostLocal)
+    fun deletePost(post: PostLocal)
 }

@@ -4,6 +4,7 @@ import com.example.domain.interfaces.DatabaseRepository
 import com.example.domain.interfaces.ApiRepository
 import com.example.domain.models.api.*
 import com.example.domain.models.db.PostLocal
+import io.reactivex.Completable
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 
@@ -12,9 +13,18 @@ class PostInteractor(
     private val databaseRepository: DatabaseRepository
 ) {
 
-    suspend fun getAllSavedPosts(): List<PostLocal> = databaseRepository.getAllPosts()
+    fun deleteAllSavedPosts() {
+        databaseRepository.deleteAllSavedPosts()
+    }
 
-    suspend fun savePost(post: Post) = databaseRepository.savePost(post)
+    suspend fun getAllSavedPosts(): Flow<List<PostLocal>> = databaseRepository.getAllPosts()
+
+    suspend fun savePost(post: Post) {
+        databaseRepository.savePost(post)
+//        post.attachments?.forEach {
+//            databaseRepository.saveAttachment(it, post.postId)
+//        }
+    }
 
     suspend fun deleteSavedPost(post: Post) = databaseRepository.deletePost(post)
 
@@ -48,5 +58,10 @@ class PostInteractor(
 
     suspend fun getPostById(posts: String): List<Post> = apiRepository.getPostById(posts)
 
-    suspend fun getVideo(videoId: String): Video = apiRepository.getVideoById(videoId)
+    suspend fun getVideo(post: Post, attachment: Attachment) {
+        val video = apiRepository.getVideoById("${attachment.video.ownerId}_${attachment.video.id}")
+        if (video == null)
+            post.attachments = null
+        else attachment.video = video
+    }
 }

@@ -4,8 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.PostInteractor
+import com.example.domain.models.api.Attachment
 import com.example.domain.models.api.Post
 import com.example.domain.models.api.Video
+import com.example.vknewsfeed.routers.AppRouter
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -38,6 +40,7 @@ open class MainViewModel(
         }
     }
 
-    suspend fun getVideo(video: Video): Video =
-        withContext(coroutineContext) { postInteractor.getVideo("${video.ownerId}_${video.id}") }
+    suspend fun getVideo(post: Post, attachment: Attachment) {
+        postInteractor.getVideo(post, attachment)
+    }
 }

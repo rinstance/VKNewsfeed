@@ -1,4 +1,4 @@
-package com.example.vknewsfeed.adapters.newsfeed
+package com.example.vknewsfeed.newsfeed.adapters.newsfeed
 
 import androidx.paging.PageKeyedDataSource
 import com.example.data.helpers.Constants
@@ -47,17 +47,18 @@ class NewsfeedPageKeyedDataSource(
             val responseNewsfeed = postInteractor.getNewsfeed(params.requestedLoadSize)
             val posts = responseNewsfeed.items
             postInteractor.getAuthors(posts)
-            getVideos(posts)
+            getVideos(ArrayList(posts))
             showNews(responseNewsfeed, posts)
             hideLoadingProgressBar()
         }
     }
 
-    private suspend fun getVideos(posts: List<Post>) {
+    private suspend fun getVideos(posts: ArrayList<Post>) {
         posts.forEach { post ->
             post.attachments?.forEach {
-                if (it.type == Constants.ATTACHMENTS_VIDEO_TYPE)
-                    it.video = postInteractor.getVideo("${it.video.ownerId}_${it.video.id}")
+                if (it.type == Constants.ATTACHMENTS_VIDEO_TYPE) {
+                    postInteractor.getVideo(post, it)
+                }
             }
         }
     }
@@ -70,7 +71,7 @@ class NewsfeedPageKeyedDataSource(
                 postInteractor.getNextNewsfeed(params.key, params.requestedLoadSize * 3)
             val posts = responseNewsfeed.items
             postInteractor.getAuthors(posts)
-            getVideos(posts)
+            getVideos(ArrayList(posts))
             showNews(responseNewsfeed, posts)
             hideLoadingProgressBar()
         }

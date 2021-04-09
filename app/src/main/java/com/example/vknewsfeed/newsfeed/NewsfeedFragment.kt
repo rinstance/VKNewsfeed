@@ -25,8 +25,10 @@ import com.example.data.helpers.Constants
 import com.example.domain.models.api.Post
 import com.example.vknewsfeed.App
 import com.example.vknewsfeed.R
-import com.example.vknewsfeed.adapters.newsfeed.NewsfeedAdapter
-import com.example.vknewsfeed.adapters.newsfeed.NewsfeedPageKeyedDataSource
+import com.example.vknewsfeed.activities.MainActivity
+import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedAdapter
+import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedPageKeyedDataSource
+import com.example.vknewsfeed.fragments.InfoDialogFragment
 import com.example.vknewsfeed.fragments.NewPostDialogFragment
 import com.example.vknewsfeed.fragments.ProgressDialogFragment
 import com.example.vknewsfeed.helpers.getNavigationResult
@@ -60,7 +62,6 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     @Inject lateinit var model: NewsfeedViewModel
     @Inject lateinit var items: PagedList<Post>
     @Inject lateinit var adapter: NewsfeedAdapter
-    @Inject lateinit var config: PagedList.Config
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -93,15 +94,37 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
         App.appComponent.newsComponentFactory()
             .create(this)
             .itemClick { startItemDetailFragment(it.sourceId, it.postId) }
-            .likeAction {
-                if (it.likes.userLikes == 0)
-                    model.setLike(it)
-                else
-                    model.deleteLike(it)
-            }
+            .likeAction { likeAction(it) }
+            .longClick { showSavePostDialog(it) }
+            .router(activity as MainActivity)
             .create(this)
             .build()
             .inject(this)
+    }
+
+    private fun showSavePostDialog(post: Post) {
+        val dialog = InfoDialogFragment()
+        dialog.setMessage(resources.getString(R.string.SAVE_POST_MESSAGE))
+        dialog.setListeners(object : InfoDialogFragment.Listener {
+            override fun cancel() = dialog.dismiss()
+
+            override fun ok() {
+                savePost(post)
+                dialog.dismiss()
+            }
+        })
+        dialog.show(childFragmentManager, "saveDialog")
+    }
+
+    private fun savePost(post: Post) {
+        model.savePost(post)
+    }
+
+    private fun likeAction(post: Post) {
+        if (post.likes.userLikes == 0)
+            model.setLike(post)
+        else
+            model.deleteLike(post)
     }
 
     private fun setupView() {
@@ -165,7 +188,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     private fun createPostAndShow(message: String) {
         launch(coroutineContext) {
             showProgressDialog()
-            val postId = model.createPost(attachPhoto, message).await().response.postId
+            val postId = model.createPost(attachPhoto, message).response.postId
             hideProgressDialog()
             startItemDetailFragment(Constants.USER_ID, postId)
         }
@@ -179,7 +202,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     private fun hideProgressDialog() = progressDialog.dismiss()
 
     private fun chooseImage() {
-        if (!requestStoragePermission()) {
+        if (requestStoragePermission()) {
             Intent().apply {
                 type = "image/*"
                 action = Intent.ACTION_GET_CONTENT

@@ -56,7 +56,7 @@ class NewPostDialogFragment : DialogFragment() {
     fun setImage(imageUri: Uri?) {
         imageUri?.let {
             imageViewing.visibility = View.VISIBLE
-            imageViewing.setImageURI(imageUri)
+            imageViewing.setImageURI(it)
             imageActionButton.setText(R.string.DELETE_IMAGE)
         }
     }

@@ -33,6 +33,6 @@ interface ApiRepository {
 
     suspend fun getPostById(posts: String): List<Post>
 
-    suspend fun getVideoById(videoId: String): Video
+    suspend fun getVideoById(videoId: String): Video?
 
 }

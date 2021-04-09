@@ -12,7 +12,7 @@ class DetailViewModel(
     suspend fun getPostById(sourceId: Int, postId: Int) =
         withContext(coroutineContext) { postInteractor.getPostById("${sourceId}_${postId}") }
 
-    suspend fun getAuthors(posts: List<Post>) =
+    suspend fun getAuthors(posts: List<Post>) {
         withContext(coroutineContext) { postInteractor.getAuthors(posts) }
-
+    }
 }

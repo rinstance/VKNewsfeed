@@ -3,7 +3,7 @@ package com.example.domain.models.api
 import com.google.gson.annotations.SerializedName
 
 data class Post(
-    val attachments: List<Attachment>?,
+    var attachments: List<Attachment>?,
     val date: Int,
     val likes: StartPostLike,
     @SerializedName("post_id")

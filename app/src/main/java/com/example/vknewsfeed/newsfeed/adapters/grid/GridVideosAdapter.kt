@@ -1,4 +1,4 @@
-package com.example.vknewsfeed.adapters.grid
+package com.example.vknewsfeed.newsfeed.adapters.grid
 
 import android.content.Context
 import android.view.LayoutInflater
