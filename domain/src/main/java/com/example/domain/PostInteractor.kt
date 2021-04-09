@@ -4,7 +4,6 @@ import com.example.domain.interfaces.DatabaseRepository
 import com.example.domain.interfaces.ApiRepository
 import com.example.domain.models.api.*
 import com.example.domain.models.db.PostLocal
-import io.reactivex.Completable
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 
@@ -26,7 +25,7 @@ class PostInteractor(
 //        }
     }
 
-    suspend fun deleteSavedPost(post: Post) = databaseRepository.deletePost(post)
+    suspend fun deleteSavedPost(post: Int) = databaseRepository.deletePost(post)
 
     suspend fun getAuthors(posts: List<Post>) {
         posts.forEach { it.postAuthor = apiRepository.getAuthors(it.sourceId) }

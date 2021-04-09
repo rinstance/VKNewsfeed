@@ -13,10 +13,10 @@
         <action
             android:id="@+id/action_to_detail_post"
             app:destination="@id/detailPostFragment"
-            app:popEnterAnim="@animator/from_left_enter"
-            app:popExitAnim="@animator/from_left_exit"
             app:enterAnim="@animator/enter"
-            app:exitAnim="@animator/exit" />
+            app:exitAnim="@animator/exit"
+            app:popEnterAnim="@animator/from_left_enter"
+            app:popExitAnim="@animator/from_left_exit" />
         <action
             android:id="@+id/action_to_auth_activity"
             app:destination="@id/authorizationActivity" />
@@ -32,7 +32,15 @@
         android:id="@+id/favouritesFragment"
         android:name="com.example.vknewsfeed.favorites.FavouritesFragment"
         android:label="fragment_favourites"
-        tools:layout="@layout/fragment_favourites" />
+        tools:layout="@layout/fragment_favourites">
+        <action
+            android:id="@+id/action_to_detail_post"
+            app:destination="@id/detailPostFragment"
+            app:enterAnim="@animator/enter"
+            app:exitAnim="@animator/exit"
+            app:popEnterAnim="@animator/from_left_enter"
+            app:popExitAnim="@animator/from_left_exit" />
+    </fragment>
     <activity
         android:id="@+id/authorizationActivity"
         android:name="com.example.vknewsfeed.activities.AuthorizationActivity"

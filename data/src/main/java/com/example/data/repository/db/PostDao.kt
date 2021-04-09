@@ -16,12 +16,12 @@ interface PostDao {
     @Query("DELETE FROM postlocal")
     fun deleteAll()
 
+    @Query("DELETE FROM postlocal WHERE id = :postId")
+    fun deletePostById(postId: Int)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPost(post: PostLocal)
 
     @Update
     fun updatePost(post: PostLocal)
-
-    @Delete
-    fun deletePost(post: PostLocal)
 }

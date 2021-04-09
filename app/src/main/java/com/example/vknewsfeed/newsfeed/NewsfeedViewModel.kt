@@ -8,6 +8,7 @@ import com.example.domain.models.api.SavedPost
 import com.example.vknewsfeed.MainViewModel
 import com.example.vknewsfeed.R
 import com.example.vknewsfeed.routers.AppRouter
+import com.google.android.play.core.internal.s
 import kotlinx.coroutines.*
 import okhttp3.MultipartBody
 
@@ -40,5 +41,9 @@ class NewsfeedViewModel(
             postInteractor.savePost(post)
             withContext(Dispatchers.Main) { router.showToast(R.string.SUCCESSFUL) }
         }
+    }
+
+    fun openDetailFragment(postId: Int, sourceId: Int) {
+        router.openDetailFragment(postId, sourceId)
     }
 }

@@ -227,12 +227,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     }
 
     private fun startItemDetailFragment(sourceId: Int, postId: Int) {
-        val bundle = Bundle().apply {
-            putInt(Constants.INTENT_SOURCE_ID, sourceId)
-            putInt(Constants.INTENT_POST_ID, postId)
-        }
-        navController.navigate(R.id.action_to_detail_post, bundle)
-        parentActivity.bottom_nav_view?.visibility = View.GONE
+        model.openDetailFragment(postId, sourceId)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

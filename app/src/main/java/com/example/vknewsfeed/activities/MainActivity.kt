@@ -3,10 +3,12 @@ package com.example.vknewsfeed.activities
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.data.helpers.Constants
 import com.example.vknewsfeed.R
@@ -16,7 +18,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), AppRouter {
     private lateinit var progressDialog: ProgressDialogFragment
-    lateinit var navController: NavController
+
+    private val navController: NavController by lazy {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_host) as NavHostFragment
+        navHostFragment.navController
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,10 +58,18 @@ class MainActivity : AppCompatActivity(), AppRouter {
 
     private fun setBottomNavigation() {
 //        supportFragmentManager.beginTransaction().add(R.id.frame, NewsfeedFragment()).commit()
-        navController = findNavController(R.id.fragment_host)
         bottom_nav_view.setupWithNavController(navController)
     }
 
     override fun showToast(textId: Int) =
         Toast.makeText(this, textId, Toast.LENGTH_SHORT).show()
+
+    override fun openDetailFragment(postId: Int, sourceId: Int) {
+        val bundle = Bundle().apply {
+            putInt(Constants.INTENT_SOURCE_ID, sourceId)
+            putInt(Constants.INTENT_POST_ID, postId)
+        }
+        bottom_nav_view?.visibility = View.GONE
+        navController.navigate(R.id.action_to_detail_post, bundle)
+    }
 }

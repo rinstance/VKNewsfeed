@@ -12,7 +12,7 @@ interface DatabaseRepository {
 
     suspend fun savePost(post: Post)
 
-    suspend fun deletePost(post: Post)
+    suspend fun deletePost(postId: Int)
 
     fun deleteAllSavedPosts()
 }

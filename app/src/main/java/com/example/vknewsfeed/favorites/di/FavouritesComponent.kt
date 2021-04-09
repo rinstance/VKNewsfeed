@@ -2,6 +2,7 @@ package com.example.vknewsfeed.favorites.di
 
 import com.example.vknewsfeed.di.MainScope
 import com.example.vknewsfeed.favorites.FavouritesFragment
+import com.example.vknewsfeed.routers.AppRouter
 import dagger.BindsInstance
 import dagger.Subcomponent
 
@@ -11,9 +12,11 @@ import dagger.Subcomponent
 @MainScope
 interface FavouritesComponent {
 
-    @Subcomponent.Factory
+    @Subcomponent.Builder
     interface Factory {
-        fun create(@BindsInstance fragment: FavouritesFragment): FavouritesComponent
+        fun router(@BindsInstance router: AppRouter): Factory
+        fun create(@BindsInstance fragment: FavouritesFragment): Factory
+        fun build(): FavouritesComponent
     }
 
     fun inject(fragment: FavouritesFragment)

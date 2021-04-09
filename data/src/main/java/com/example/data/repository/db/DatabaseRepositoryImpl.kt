@@ -16,7 +16,7 @@ class DatabaseRepositoryImpl(
 
     override suspend fun savePost(post: Post) = postDao.insertPost(mapPostToPostLocal(post))
 
-    override suspend fun deletePost(post: Post) = postDao.deletePost(mapPostToPostLocal(post))
+    override suspend fun deletePost(postId: Int) = postDao.deletePostById(postId)
 
     override fun deleteAllSavedPosts() = postDao.deleteAll()
 }

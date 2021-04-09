@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import com.example.domain.models.db.PostLocal
 import com.example.vknewsfeed.App
 import com.example.vknewsfeed.R
+import com.example.vknewsfeed.activities.MainActivity
 import com.example.vknewsfeed.favorites.adapters.FavouritePostsAdapter
+import com.example.vknewsfeed.fragments.InfoDialogFragment
 import com.example.vknewsfeed.fragments.ProgressDialogFragment
 import kotlinx.android.synthetic.main.custom_toolbar.*
 import kotlinx.android.synthetic.main.fragment_favourites.*
@@ -40,6 +42,8 @@ class FavouritesFragment : Fragment(), CoroutineScope {
     private fun setDI() {
         App.appComponent.favouritesComponentFactory()
             .create(this)
+            .router(activity as MainActivity)
+            .build()
             .inject(this)
     }
 
@@ -61,11 +65,22 @@ class FavouritesFragment : Fragment(), CoroutineScope {
     }
 
     private fun showDeletePostDialog(post: PostLocal) {
-        TODO("Not yet implemented")
+        val dialog = InfoDialogFragment()
+        dialog.setMessage(resources.getString(R.string.DELETE_POST_MESSAGE))
+        dialog.setOkText(resources.getString(R.string.DELETE))
+        dialog.setListeners(object : InfoDialogFragment.Listener {
+            override fun cancel() = dialog.dismiss()
+
+            override fun ok() {
+                model.deletePost(post.id)
+                dialog.dismiss()
+            }
+        })
+        dialog.show(childFragmentManager, "deletePost")
     }
 
     private fun startDetailFragment(post: PostLocal) {
-        TODO("Not yet implemented")
+        model.openDetailFragment(post.id, post.sourceId)
     }
 
     private fun setView() {
