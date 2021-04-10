@@ -47,7 +47,7 @@
                         android:layout_height="wrap_content"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
-                        android:text="@string/NAME"
+                        android:text="@string/NAME_TEST"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -58,7 +58,7 @@
                         android:layout_marginTop="8dp"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
-                        android:text="@string/DATE" />
+                        android:text="@string/DATE_TEST" />
 
                 </LinearLayout>
 
@@ -92,7 +92,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="4dp"
                 android:gravity="center"
-                android:text="@string/NUMBER_LIKES"
+                android:text="@string/NUMBER_LIKES_TEST"
                 android:textSize="16sp" />
 
             <ImageButton

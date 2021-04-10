@@ -57,7 +57,6 @@ class MainActivity : AppCompatActivity(), AppRouter {
     }
 
     private fun setBottomNavigation() {
-//        supportFragmentManager.beginTransaction().add(R.id.frame, NewsfeedFragment()).commit()
         bottom_nav_view.setupWithNavController(navController)
     }
 

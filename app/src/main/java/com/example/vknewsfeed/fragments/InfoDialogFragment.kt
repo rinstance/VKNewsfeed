@@ -17,12 +17,7 @@ class InfoDialogFragment : DialogFragment() {
     private lateinit var okButton: TextView
     private var message: String? = null
     private  var okText: String? = null
-    private lateinit var listener: Listener
-
-    interface Listener {
-        fun cancel()
-        fun ok()
-    }
+    private lateinit var listener: () -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,11 +36,14 @@ class InfoDialogFragment : DialogFragment() {
         text_message.text = message
         if (okText != null)
             okButton.text = okText
-        okButton.setOnClickListener { listener.ok() }
-        cancelButton.setOnClickListener { listener.cancel() }
+        okButton.setOnClickListener {
+            listener
+            dismiss()
+        }
+        cancelButton.setOnClickListener { dismiss() }
     }
 
-    fun setListeners(listener: Listener) {
+    fun setOKListener(listener: () -> Unit) {
         this.listener = listener
     }
 

@@ -12,6 +12,7 @@ import com.example.vknewsfeed.activities.MainActivity
 import com.example.vknewsfeed.favorites.adapters.FavouritePostsAdapter
 import com.example.vknewsfeed.fragments.InfoDialogFragment
 import com.example.vknewsfeed.fragments.ProgressDialogFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_toolbar.*
 import kotlinx.android.synthetic.main.fragment_favourites.*
 import kotlinx.coroutines.*
@@ -68,14 +69,7 @@ class FavouritesFragment : Fragment(), CoroutineScope {
         val dialog = InfoDialogFragment()
         dialog.setMessage(resources.getString(R.string.DELETE_POST_MESSAGE))
         dialog.setOkText(resources.getString(R.string.DELETE))
-        dialog.setListeners(object : InfoDialogFragment.Listener {
-            override fun cancel() = dialog.dismiss()
-
-            override fun ok() {
-                model.deletePost(post.id)
-                dialog.dismiss()
-            }
-        })
+        dialog.setOKListener { model.deletePost(post.id) }
         dialog.show(childFragmentManager, "deletePost")
     }
 
@@ -84,6 +78,7 @@ class FavouritesFragment : Fragment(), CoroutineScope {
     }
 
     private fun setView() {
+        activity?.bottom_nav_view?.visibility = View.VISIBLE
         action_back?.visibility = View.GONE
         toolbar_title?.text = resources.getString(R.string.FAVOURITES)
         button_delete_all?.setOnClickListener { deleteAllPosts() }

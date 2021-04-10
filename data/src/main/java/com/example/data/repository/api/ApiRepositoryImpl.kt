@@ -28,7 +28,7 @@ class ApiRepositoryImpl(
             itemId = post.postId
         ).response.likes
 
-    override suspend fun getNewsfeedRequest(requestedLoadSize: Int): Newsfeed =
+    override suspend fun getNewsfeedRequest(requestedLoadSize: Int): Newsfeed? =
         vkApi.getResponseNewsfeed(
             filters = Constants.FILTERS_FOR_NEWS,
             count = requestedLoadSize.toString()
@@ -57,8 +57,8 @@ class ApiRepositoryImpl(
     }
 
     override suspend fun getNewsfeed(requestedLoadSize: Int): Newsfeed {
-        val news = getNewsfeedRequest(requestedLoadSize)
-        return if (news.items == null) {
+        val news= getNewsfeedRequest(requestedLoadSize)
+        return if (news?.items == null) {
             delay(requestDelayMillis)
             getNewsfeed(requestedLoadSize)
         } else news

@@ -36,7 +36,7 @@ class AuthorizationActivity : AppCompatActivity() {
     }
 
     private fun setToolbar() {
-        (toolbar_title as TextView).setText(R.string.TOOLBAR_TITLE_AUTH)
+        (toolbar_title as TextView).setText(R.string.AUTHORIZATION)
         action_back.visibility = View.GONE
     }
 

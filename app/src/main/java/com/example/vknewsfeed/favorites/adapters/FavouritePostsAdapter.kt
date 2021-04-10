@@ -36,6 +36,8 @@ class FavouritePostsAdapter(
 
         fun bind(post: PostLocal, itemClick: (PostLocal) -> Unit, longClick: (PostLocal) -> Unit) {
             with(itemView) {
+                like_count_text.visibility = View.GONE
+                like_button.visibility = View.GONE
                 author_name.text = post.author
                 date.text = post.date
                 text.text = post.text

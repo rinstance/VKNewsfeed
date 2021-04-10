@@ -17,28 +17,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/text_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/TYPE_MESSAGE"
-        android:textColor="@color/colorTextGrey"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_create" />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_message"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/TextInputBackgroundStyle"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="16dp"
+        android:textColorHint="@color/colorTextHintGrey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_message">
+        app:layout_constraintTop_toBottomOf="@+id/text_create">
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/name_edit_text"
@@ -66,10 +56,10 @@
         android:id="@+id/image_viewing"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:scaleType="fitXY"
-        android:visibility="gone"
         android:layout_marginTop="16dp"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_launcher_background"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_image_action" />
@@ -80,8 +70,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/CANCEL"
-        android:textSize="20sp"
         android:textColor="@color/colorTextRed"
+        android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/text_create_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_viewing" />
@@ -93,9 +83,9 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
         android:text="@string/CREATE"
-        android:textStyle="bold"
         android:textColor="@color/colorTextGreen"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/text_cancel_button"

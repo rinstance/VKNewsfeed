@@ -17,18 +17,17 @@ import kotlinx.android.synthetic.main.dialog_fragment_new_post.*
 import kotlinx.android.synthetic.main.dialog_fragment_new_post.view.*
 
 class NewPostDialogFragment : DialogFragment() {
-    private lateinit var clickListeners: IClickListeners
+    private lateinit var clickListeners: Listeners
     private lateinit var imageActionButton: Button
     private lateinit var imageViewing: ImageView
     private lateinit var messEdiText: EditText
 
-    interface IClickListeners {
-        fun cancel()
+    interface Listeners {
         fun create(message: String)
         fun attachImage(isSelected: Boolean)
     }
 
-    fun setClickListeners(clickListeners: IClickListeners) {
+    fun setClickListeners(clickListeners: Listeners) {
         this.clickListeners = clickListeners
     }
 
@@ -43,7 +42,7 @@ class NewPostDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         imageActionButton.setOnClickListener { clickListeners.attachImage(imageViewing.visibility != View.GONE) }
-        text_cancel_button.setOnClickListener { clickListeners.cancel() }
+        text_cancel_button.setOnClickListener { dismiss() }
         text_create_button.setOnClickListener { clickListeners.create(messEdiText.text.toString()) }
     }
 

@@ -14,6 +14,7 @@ import javax.inject.Named
         NewsfeedAdapterModule::class
     ]
 )
+@MainScope
 interface NewsfeedComponent {
 
     @Subcomponent.Builder

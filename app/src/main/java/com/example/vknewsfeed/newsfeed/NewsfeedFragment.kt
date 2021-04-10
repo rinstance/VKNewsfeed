@@ -56,6 +56,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     private lateinit var progressDialog: ProgressDialogFragment
     private lateinit var loadingProgressChannel: Channel<Boolean>
     private lateinit var navController: NavController
+    private var isLoadingPosts = false
     private var attachPhoto: MultipartBody.Part? = null
     private val REQUEST_CHOOSE_IMAGE = 1
     private val REQUEST_CODE_PERMISSION_READ_CONTACTS = 2
@@ -78,7 +79,12 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        progress_indicator.hide()
+        setIndicatorAfterRestored()
+    }
+
+    private fun setIndicatorAfterRestored() {
+        if (isLoadingPosts) progress_indicator?.show()
+        else progress_indicator?.hide()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -105,14 +111,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     private fun showSavePostDialog(post: Post) {
         val dialog = InfoDialogFragment()
         dialog.setMessage(resources.getString(R.string.SAVE_POST_MESSAGE))
-        dialog.setListeners(object : InfoDialogFragment.Listener {
-            override fun cancel() = dialog.dismiss()
-
-            override fun ok() {
-                savePost(post)
-                dialog.dismiss()
-            }
-        })
+        dialog.setOKListener { savePost(post) }
         dialog.show(childFragmentManager, "saveDialog")
     }
 
@@ -128,7 +127,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     }
 
     private fun setupView() {
-        parentActivity.bottom_nav_view.visibility = View.VISIBLE
+        parentActivity.bottom_nav_view?.visibility = View.VISIBLE
         setToolbar()
         setAdapter()
         updateAdapterAfterLike()
@@ -136,16 +135,12 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
 
     private suspend fun setLoadingProgressBar() {
         loadingProgressChannel.consumeEach { isLoading ->
-                if (isLoading)
-                    progress_indicator?.show()
-                else
-                    progress_indicator?.hide()
-            }
-    }
-
-    override fun onStop() {
-        super.onStop()
-//        loadingProgressChannel.cancel()
+            isLoadingPosts = isLoading
+            if (isLoading)
+                progress_indicator?.show()
+            else
+                progress_indicator?.hide()
+        }
     }
 
     private fun initActivity() {
@@ -155,9 +150,17 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
 
     private fun setToolbar() {
         icon_add_post.setOnClickListener { createNewPostDialog() }
-        icon_log_out.setOnClickListener { logout() }
+        icon_log_out.setOnClickListener { showLogoutDialog() }
         action_back.visibility = View.GONE
-        (toolbar_title as TextView).setText(R.string.TOOLBAR_TITLE_NEWS)
+        (toolbar_title as TextView).setText(R.string.NEWSFEED)
+    }
+
+    private fun showLogoutDialog() {
+        val dialog = InfoDialogFragment()
+        dialog.setMessage(resources.getString(R.string.ARE_YOU_SURE))
+        dialog.setOkText(resources.getString(R.string.LOG_OUT))
+        dialog.setOKListener { logout() }
+        dialog.show(childFragmentManager, "logoutDialog")
     }
 
 
@@ -165,9 +168,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
         attachPhoto = null
         newPostDialog = NewPostDialogFragment()
         newPostDialog.show(childFragmentManager, "createPost")
-        newPostDialog.setClickListeners(object : NewPostDialogFragment.IClickListeners {
-
-            override fun cancel() = newPostDialog.dismiss()
+        newPostDialog.setClickListeners(object : NewPostDialogFragment.Listeners {
 
             override fun create(message: String) {
                 newPostDialog.dismiss()
@@ -255,9 +256,8 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     private fun chooseImageResult(data: Intent) {
         val imageUri = data.data
         val file = File(getPathFromURI(imageUri))
-        val requestFile = RequestBody.create(MediaType.parse(imageUri?.let {
-            parentActivity.contentResolver?.getType(it)
-        }), file)
+        val requestFile =
+            RequestBody.create(MediaType.parse(imageUri?.let { parentActivity.contentResolver?.getType(it) }), file)
         attachPhoto = MultipartBody.Part.createFormData("photo", file.name, requestFile)
         if (attachPhoto != null) newPostDialog.setImage(imageUri)
     }
