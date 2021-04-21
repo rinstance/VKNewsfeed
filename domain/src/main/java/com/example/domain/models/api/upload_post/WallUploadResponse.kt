@@ -1,4 +1,4 @@
-package com.example.data.network.models.upload_post
+package com.example.domain.models.api.upload_post
 
 import com.example.domain.models.api.WallUploadModel
 

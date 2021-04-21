@@ -1,4 +1,4 @@
-package com.example.data.network.models.video
+package com.example.domain.models.api.video
 
 import com.example.domain.models.api.Video
 

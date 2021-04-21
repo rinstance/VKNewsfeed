@@ -48,6 +48,9 @@ import java.io.File
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
+private const val REQUEST_CHOOSE_IMAGE = 1
+private const val REQUEST_CODE_PERMISSION_READ_CONTACTS = 2
+
 class NewsfeedFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = SupervisorJob() + Dispatchers.Main
@@ -58,8 +61,6 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     private lateinit var navController: NavController
     private var isLoadingPosts = false
     private var attachPhoto: MultipartBody.Part? = null
-    private val REQUEST_CHOOSE_IMAGE = 1
-    private val REQUEST_CODE_PERMISSION_READ_CONTACTS = 2
     @Inject lateinit var model: NewsfeedViewModel
     @Inject lateinit var items: PagedList<Post>
     @Inject lateinit var adapter: NewsfeedAdapter

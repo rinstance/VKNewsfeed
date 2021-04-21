@@ -5,11 +5,11 @@ import com.example.data.network.models.newsfeed.NewsfeedResponse
 import com.example.data.network.models.newsfeed.ResponseAuthor
 import com.example.data.network.models.saved_post.SavePhotoResponse
 import com.example.domain.models.api.SavedPost
-import com.example.data.network.models.upload_post.WallResponse
+import com.example.domain.models.api.upload_post.WallResponse
 import com.example.domain.models.api.WallUploadData
-import com.example.data.network.models.upload_post.WallUploadResponse
+import com.example.domain.models.api.upload_post.WallUploadResponse
 import com.example.data.network.models.user.UsersResponse
-import com.example.data.network.models.video.ResponseVideo
+import com.example.domain.models.api.video.ResponseVideo
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
