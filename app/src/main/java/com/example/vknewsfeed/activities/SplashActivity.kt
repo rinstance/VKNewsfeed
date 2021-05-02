@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import com.example.domain.helpers.Constants
 import com.example.vknewsfeed.R
+import com.example.vknewsfeed.activities.auth.AuthorizationActivity
 import com.example.vknewsfeed.activities.main.MainActivity
 
 class SplashActivity : AppCompatActivity() {

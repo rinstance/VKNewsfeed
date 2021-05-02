@@ -13,6 +13,7 @@ import com.example.vknewsfeed.activities.main.MainActivity
 import com.example.vknewsfeed.favorites.adapters.FavouritePostsAdapter
 import com.example.vknewsfeed.fragments.InfoDialogFragment
 import com.example.vknewsfeed.fragments.ProgressDialogFragment
+import com.example.vknewsfeed.helpers.DialogConstants
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_toolbar.*
 import kotlinx.android.synthetic.main.fragment_favourites.*
@@ -69,9 +70,9 @@ class FavouritesFragment : Fragment(), CoroutineScope {
 
     private fun showDeletePostDialog(post: PostLocal) {
         val dialog = InfoDialogFragment()
-        dialog.show(childFragmentManager, "deletePost")
-        dialog.setMessage(resources.getString(R.string.DELETE_POST_MESSAGE))
-        dialog.setOkText(resources.getString(R.string.DELETE))
+        dialog.show(childFragmentManager, DialogConstants.DELETE_POST)
+        dialog.setMessage(resources.getString(R.string.delete_post_message))
+        dialog.setOkText(resources.getString(R.string.delete))
         dialog.setOKListener(object : InfoDialogFragment.Listener {
             override fun ok() = model.deletePost(post.id)
         })
@@ -84,7 +85,7 @@ class FavouritesFragment : Fragment(), CoroutineScope {
     private fun setView() {
         activity?.bottom_nav_view?.visibility = View.VISIBLE
         action_back?.visibility = View.GONE
-        toolbar_title?.text = resources.getString(R.string.FAVOURITES)
+        toolbar_title?.text = resources.getString(R.string.favourites)
         button_delete_all?.setOnClickListener { deleteAllPosts() }
     }
 
@@ -94,7 +95,7 @@ class FavouritesFragment : Fragment(), CoroutineScope {
 
     private fun showProgressDialog() {
         progressDialog = ProgressDialogFragment()
-        progressDialog.show(childFragmentManager, "loading")
+        progressDialog.show(childFragmentManager, DialogConstants.LOADING)
     }
 
     private fun hideProgressDialog() {

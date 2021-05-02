@@ -4,11 +4,11 @@
     <item
         android:id="@+id/newsfeedFragment"
         android:icon="@drawable/ic_fiber_new"
-        android:title="@string/NEWSFEED" />
+        android:title="@string/newsfeed" />
 
     <item
         android:id="@+id/favouritesFragment"
         android:icon="@drawable/ic_star"
-        android:title="@string/FAVOURITES" />
+        android:title="@string/favourites" />
 
 </menu>

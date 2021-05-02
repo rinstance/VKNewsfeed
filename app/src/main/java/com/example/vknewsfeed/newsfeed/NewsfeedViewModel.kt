@@ -40,7 +40,7 @@ class NewsfeedViewModel(
     fun savePost(post: Post) {
         viewModelScope.launch(coroutineContext) {
             postInteractor.savePost(post)
-            withContext(Dispatchers.Main) { router.showToast(R.string.SUCCESSFUL) }
+            withContext(Dispatchers.Main) { router.showToast(R.string.successful) }
         }
     }
 

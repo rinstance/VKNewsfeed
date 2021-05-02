@@ -4,6 +4,7 @@ import com.example.domain.helpers.Constants
 import com.example.data.network.VKApi
 import com.example.data.network.interceptors.ApiConstInterceptor
 import com.example.data.network.interceptors.LoggingInterceptor
+import com.example.domain.BuildConfig
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -26,7 +27,7 @@ class ApiModule {
     fun buildRetrofit(client: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .client(client)
-            .baseUrl(Constants.BASE_METHODS_URL)
+            .baseUrl(BuildConfig.BASE_METHODS_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

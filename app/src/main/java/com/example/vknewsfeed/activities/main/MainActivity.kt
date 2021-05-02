@@ -2,7 +2,6 @@ package com.example.vknewsfeed.activities.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +11,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.domain.helpers.Constants
 import com.example.vknewsfeed.App
 import com.example.vknewsfeed.R
-import com.example.vknewsfeed.activities.AuthorizationActivity
+import com.example.vknewsfeed.activities.auth.AuthorizationActivity
 import com.example.vknewsfeed.fragments.ProgressDialogFragment
 import com.example.vknewsfeed.routers.AppRouter
 import kotlinx.android.synthetic.main.activity_main.*

@@ -5,7 +5,6 @@ import com.example.data.di.ApiModule
 import com.example.data.di.AppModule
 import com.example.data.di.DatabaseModule
 import com.example.data.di.RepositoryModule
-import com.example.vknewsfeed.activities.AuthorizationActivity
 import com.example.vknewsfeed.activities.main.di.MainComponent
 import com.example.vknewsfeed.detail.di.DetailComponent
 import com.example.vknewsfeed.favorites.di.FavouritesComponent

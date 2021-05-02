@@ -30,6 +30,7 @@ import com.example.vknewsfeed.activities.main.MainActivity
 import com.example.vknewsfeed.fragments.InfoDialogFragment
 import com.example.vknewsfeed.fragments.NewPostDialogFragment
 import com.example.vknewsfeed.fragments.ProgressDialogFragment
+import com.example.vknewsfeed.helpers.DialogConstants
 import com.example.vknewsfeed.helpers.getNavigationResult
 import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedAdapter
 import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedPageKeyedDataSource
@@ -112,8 +113,8 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
 
     private fun showSavePostDialog(post: Post) {
         val dialog = InfoDialogFragment()
-        dialog.show(childFragmentManager, "saveDialog")
-        dialog.setMessage(resources.getString(R.string.SAVE_POST_MESSAGE))
+        dialog.show(childFragmentManager, DialogConstants.SAVE_DIALOG)
+        dialog.setMessage(resources.getString(R.string.save_post_message))
         dialog.setOKListener(object : InfoDialogFragment.Listener {
             override fun ok() = savePost(post)
         })
@@ -154,7 +155,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
         icon_log_out?.setOnClickListener { showLogoutDialog() }
         icon_filters?.setOnClickListener { popupFilters(it) }
         action_back.visibility = View.GONE
-        (toolbar_title as TextView).setText(R.string.NEWSFEED)
+        (toolbar_title as TextView).setText(R.string.newsfeed)
     }
 
     private fun popupFilters(view: View) {
@@ -189,9 +190,9 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
 
     private fun showLogoutDialog() {
         val dialog = InfoDialogFragment()
-        dialog.show(childFragmentManager, "logoutDialog")
-        dialog.setMessage(resources.getString(R.string.ARE_YOU_SURE))
-        dialog.setOkText(resources.getString(R.string.LOG_OUT))
+        dialog.show(childFragmentManager, DialogConstants.LOGOUT)
+        dialog.setMessage(resources.getString(R.string.are_you_sure))
+        dialog.setOkText(resources.getString(R.string.log_out))
         dialog.setOKListener(object : InfoDialogFragment.Listener {
             override fun ok() = logout()
         })
@@ -200,7 +201,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     private fun createNewPostDialog() {
         attachPhoto = null
         newPostDialog = NewPostDialogFragment()
-        newPostDialog.show(childFragmentManager, "createPost")
+        newPostDialog.show(childFragmentManager, DialogConstants.CREATE_POST)
         newPostDialog.setClickListeners(object : NewPostDialogFragment.Listeners {
 
             override fun create(message: String) {
@@ -230,7 +231,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
 
     private fun showProgressDialog() {
         progressDialog = ProgressDialogFragment()
-        progressDialog.show(childFragmentManager, "loading")
+        progressDialog.show(childFragmentManager, DialogConstants.LOADING)
     }
 
     private fun hideProgressDialog() = progressDialog.dismiss()
@@ -238,10 +239,10 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     private fun chooseImage() {
         if (requestStoragePermission()) {
             Intent().apply {
-                type = "image/*"
+                type = Constants.IMAGE_TYPE_INTENT
                 action = Intent.ACTION_GET_CONTENT
                 startActivityForResult(
-                    Intent.createChooser(this, resources.getString(R.string.SELECT_IMAGE)),
+                    Intent.createChooser(this, resources.getString(R.string.select_image)),
                     REQUEST_CHOOSE_IMAGE
                 )
             }

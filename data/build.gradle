@@ -19,9 +19,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            buildConfigField("String", "ENDPOINT", "\"vk.com\"")
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -63,11 +60,4 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     implementation "android.arch.persistence.room:rxjava2:1.1.1"
-
-    //firebase
-    def firebaseVersion = "19.7.0"
-    implementation platform('com.google.firebase:firebase-bom:27.1.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation "com.google.firebase:firebase-database:$firebaseVersion"
-    implementation 'com.google.firebase:firebase-core:18.0.3'
 }

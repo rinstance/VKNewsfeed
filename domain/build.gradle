@@ -18,6 +18,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_METHODS_URL", "\"https://api.vk.com/method/\"")
+            buildConfigField("String", "API_VERSION", "\"5.124\"")
+            buildConfigField("String", "VK_APPLICATION_ID", "\"7617205\"")
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

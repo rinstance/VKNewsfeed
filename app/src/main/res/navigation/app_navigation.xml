@@ -43,7 +43,7 @@
     </fragment>
     <activity
         android:id="@+id/authorizationActivity"
-        android:name="com.example.vknewsfeed.activities.AuthorizationActivity"
+        android:name="com.example.vknewsfeed.activities.auth.AuthorizationActivity"
         android:label="activity_authorization"
         tools:layout="@layout/activity_authorization" />
 

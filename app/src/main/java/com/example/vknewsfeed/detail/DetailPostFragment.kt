@@ -68,7 +68,7 @@ class DetailPostFragment : Fragment(), CoroutineScope {
 
     private fun showProgressDialog() {
         progressDialog = ProgressDialogFragment()
-        progressDialog.show(childFragmentManager, "loading")
+        progressDialog.show(childFragmentManager, DialogConstants.LOADING)
     }
 
     private fun hideProgressDialog() = progressDialog.dismiss()

@@ -1,43 +1,40 @@
 <resources>
     <string name="app_name">VKNewsfeed</string>
-    <string name="NEWSFEED">Newsfeed</string>
-    <string name="FAVOURITES">Favourites</string>
-    <string name="LOG_IN">LogIn</string>
-    <string name="LOG_OUT">LogOut</string>
-    <string name="NAME_TEST">Name</string>
-    <string name="DATE_TEST">12.12.12</string>
-    <string name="NUMBER_LIKES_TEST">623</string>
-    <string name="CREATE_POST">Create post</string>
-    <string name="CREATE">Create</string>
-    <string name="CANCEL">Cancel</string>
-    <string name="AWESOME">Awesome</string>
-    <string name="CANCELED">Canceled</string>
-    <string name="POST_MESSAGE">Post message</string>
-    <string name="TYPE_MESSAGE">Type message:</string>
-    <string name="ATTACH_IMAGE">Attach image</string>
-    <string name="DELETE_IMAGE">Delete image</string>
-    <string name="SELECT_IMAGE">Select image</string>
-    <string name="ADD">Add post</string>
-    <string name="EXIT">Exit</string>
-    <string name="MANY_REQUESTS">Too many requests per second (0_o)</string>
-    <string name="TEXT">
+    <string name="newsfeed">Newsfeed</string>
+    <string name="favourites">Favourites</string>
+    <string name="log_in">Login</string>
+    <string name="log_out">Logout</string>
+    <string name="name_test">Name</string>
+    <string name="date_test">12.12.12</string>
+    <string name="number_likes_test">623</string>
+    <string name="create_post">Create post</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="awesome">Awesome</string>
+    <string name="canceled">Canceled</string>
+    <string name="post_message">Post message</string>
+    <string name="type_message">Type message:</string>
+    <string name="attach_image">Attach image</string>
+    <string name="delete_image">Delete image</string>
+    <string name="select_image">Select image</string>
+    <string name="add">Add post</string>
+    <string name="exit">Exit</string>
+    <string name="many_requests">Too many requests per second (0_o)</string>
+    <string name="text">
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
         ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
     </string>
 
-
-    <integer name="com_vk_sdk_AppId">7617205</integer>
-
-    <string name="AUTHORIZATION">Authorization</string>
-    <string name="SAVE">Save</string>
-    <string name="SAVE_POST_MESSAGE">Save to favourites? &#129402;</string>
-    <string name="DELETE_POST_MESSAGE">Delete from favourites?</string>
-    <string name="SUCCESSFUL">Successful</string>
-    <string name="DELETE_ALL">Delete all</string>
-    <string name="ARE_YOU_SURE">Are you sure?</string>
-    <string name="DELETE">Delete</string>
+    <string name="authorization">Authorization</string>
+    <string name="save">Save</string>
+    <string name="save_post_message">Save to favourites? &#129402;</string>
+    <string name="delete_post_message">Delete from favourites?</string>
+    <string name="successful">Successful</string>
+    <string name="delete_all">Delete all</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="delete">Delete</string>
     <string name="only_video">Only videos</string>
     <string name="only_photo">Only photos</string>
     <string name="all">All</string>
-    <string name="NO_SAVED">No saved posts &#128549;</string>
+    <string name="no_saved">No saved posts &#128549;</string>
 </resources>
