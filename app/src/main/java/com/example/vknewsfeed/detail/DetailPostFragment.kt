@@ -9,6 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.data.helpers.*
+import com.example.domain.helpers.Constants
 import com.example.domain.models.api.Attachment
 import com.example.domain.models.api.Post
 import com.example.domain.models.api.StartPostLike
@@ -61,9 +62,7 @@ class DetailPostFragment : Fragment(), CoroutineScope {
     }
 
     private fun setLikeListener() {
-        detail_like_text.setOnClickListener {
-            if (post.likes.userLikes == 0) model.setLike(post) else model.deleteLike(post)
-        }
+        detail_like_text.setOnClickListener { model.doLike(post) }
         model.mutableItemAfterLike.observe(viewLifecycleOwner, Observer { setLikeView(it.likes) })
     }
 

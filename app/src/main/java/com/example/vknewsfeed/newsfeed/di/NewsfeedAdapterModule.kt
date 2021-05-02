@@ -1,7 +1,7 @@
 package com.example.vknewsfeed.newsfeed.di
 
 import androidx.paging.PagedList
-import com.example.data.helpers.Constants
+import com.example.domain.helpers.Constants
 import com.example.domain.PostInteractor
 import com.example.domain.models.api.Post
 import com.example.vknewsfeed.newsfeed.adapters.newsfeed.PostDiffUtilCallback

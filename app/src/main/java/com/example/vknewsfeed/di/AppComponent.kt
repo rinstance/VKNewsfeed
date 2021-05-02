@@ -5,6 +5,8 @@ import com.example.data.di.ApiModule
 import com.example.data.di.AppModule
 import com.example.data.di.DatabaseModule
 import com.example.data.di.RepositoryModule
+import com.example.vknewsfeed.activities.AuthorizationActivity
+import com.example.vknewsfeed.activities.main.di.MainComponent
 import com.example.vknewsfeed.detail.di.DetailComponent
 import com.example.vknewsfeed.favorites.di.FavouritesComponent
 import com.example.vknewsfeed.newsfeed.di.NewsfeedComponent
@@ -18,7 +20,8 @@ import javax.inject.Singleton
         ApiModule::class,
         DatabaseModule::class,
         AppModule::class,
-        RepositoryModule::class
+        RepositoryModule::class,
+        HelperModule::class
     ]
 )
 interface AppComponent {
@@ -31,7 +34,8 @@ interface AppComponent {
         fun build(): AppComponent
     }
 
-    fun newsComponentFactory(): NewsfeedComponent.Factory
+    fun newsComponentBuilder(): NewsfeedComponent.Factory
     fun detailComponentFactory(): DetailComponent.Factory
-    fun favouritesComponentFactory(): FavouritesComponent.Factory
+    fun favouritesComponentBuilder(): FavouritesComponent.Factory
+    fun mainComponentFactory(): MainComponent.Factory
 }

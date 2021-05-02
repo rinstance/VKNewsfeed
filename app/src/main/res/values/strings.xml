@@ -36,5 +36,8 @@
     <string name="DELETE_ALL">Delete all</string>
     <string name="ARE_YOU_SURE">Are you sure?</string>
     <string name="DELETE">Delete</string>
+    <string name="only_video">Only videos</string>
+    <string name="only_photo">Only photos</string>
+    <string name="all">All</string>
     <string name="NO_SAVED">No saved posts &#128549;</string>
 </resources>

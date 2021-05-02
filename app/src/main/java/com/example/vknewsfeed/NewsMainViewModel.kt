@@ -11,14 +11,14 @@ import com.example.vknewsfeed.routers.AppRouter
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-open class MainViewModel(
+open class NewsMainViewModel(
     private val postInteractor: PostInteractor
 ) : ViewModel(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = SupervisorJob() + Dispatchers.IO
     val mutableItemAfterLike = MutableLiveData<Post>()
 
-    fun setLike(post: Post) {
+    private fun setLike(post: Post) {
         viewModelScope.launch(Dispatchers.IO) {
             val likes = postInteractor.setLike(post)
             post.likes.apply {
@@ -29,7 +29,7 @@ open class MainViewModel(
         }
     }
 
-    fun deleteLike(post: Post) {
+    private fun deleteLike(post: Post) {
         viewModelScope.launch(Dispatchers.IO) {
             val likes = postInteractor.deleteLike(post)
             post.likes.apply {
@@ -42,5 +42,12 @@ open class MainViewModel(
 
     suspend fun getVideo(post: Post, attachment: Attachment) {
         postInteractor.getVideo(post, attachment)
+    }
+
+    fun doLike(post: Post) {
+        if (post.likes.userLikes == 0)
+            setLike(post)
+        else
+            deleteLike(post)
     }
 }

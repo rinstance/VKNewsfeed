@@ -1,6 +1,6 @@
 package com.example.data.network.interceptors
 
-import com.example.data.helpers.Constants
+import com.example.domain.helpers.Constants
 import okhttp3.Interceptor
 import okhttp3.Response
 

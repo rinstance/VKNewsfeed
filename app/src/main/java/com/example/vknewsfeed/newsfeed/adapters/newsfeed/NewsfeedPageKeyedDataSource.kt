@@ -1,7 +1,8 @@
 package com.example.vknewsfeed.newsfeed.adapters.newsfeed
 
+import android.util.Log
 import androidx.paging.PageKeyedDataSource
-import com.example.data.helpers.Constants
+import com.example.domain.helpers.Constants
 import com.example.domain.PostInteractor
 import com.example.domain.models.api.Newsfeed
 import com.example.domain.models.api.Post
@@ -44,11 +45,11 @@ class NewsfeedPageKeyedDataSource(
         initialCallback = callback
         launch(coroutineContext) {
             showLoadingProgressBar()
-            val responseNewsfeed = postInteractor.getNewsfeed(params.requestedLoadSize)
-            val posts = responseNewsfeed.items
+            val newsfeed = postInteractor.getNewsfeed(params.requestedLoadSize)
+            val posts = newsfeed.items
             postInteractor.getAuthors(posts)
             getVideos(ArrayList(posts))
-            showNews(responseNewsfeed, posts)
+            showNews(newsfeed, posts)
             hideLoadingProgressBar()
         }
     }
@@ -67,12 +68,12 @@ class NewsfeedPageKeyedDataSource(
         nextCallback = callback
         launch(coroutineContext) {
             showLoadingProgressBar()
-            val responseNewsfeed =
-                postInteractor.getNextNewsfeed(params.key, params.requestedLoadSize * 3)
-            val posts = responseNewsfeed.items
+            val newsfeed =
+                postInteractor.getNextNewsfeed(params.key, params.requestedLoadSize)
+            val posts = newsfeed.items
             postInteractor.getAuthors(posts)
             getVideos(ArrayList(posts))
-            showNews(responseNewsfeed, posts)
+            showNews(newsfeed, posts)
             hideLoadingProgressBar()
         }
     }

@@ -1,6 +1,6 @@
 package com.example.data.repository.api
 
-import com.example.data.helpers.Constants
+import com.example.domain.helpers.Constants
 import com.example.data.network.VKApi
 import com.example.domain.models.api.upload_post.WallResponse
 import com.example.domain.models.api.video.ResponseVideo

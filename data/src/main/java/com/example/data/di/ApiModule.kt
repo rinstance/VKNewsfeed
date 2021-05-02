@@ -1,6 +1,6 @@
 package com.example.data.di
 
-import com.example.data.helpers.Constants
+import com.example.domain.helpers.Constants
 import com.example.data.network.VKApi
 import com.example.data.network.interceptors.ApiConstInterceptor
 import com.example.data.network.interceptors.LoggingInterceptor

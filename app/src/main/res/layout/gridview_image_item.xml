@@ -10,7 +10,7 @@
         android:adjustViewBounds="true"
         android:layout_height="500dp"
         android:layout_gravity="center"
-        android:scaleType="fitXY"
+        android:scaleType="fitCenter"
         android:layout_margin="2dp"
         android:layout_width="match_parent" />
 

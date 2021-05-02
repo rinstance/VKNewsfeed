@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/onlyPhotos"
+        android:title="@string/only_photo" />
+
+    <item
+        android:id="@+id/onlyVideos"
+        android:title="@string/only_video" />
+
+    <item
+        android:id="@+id/allFilters"
+        android:title="@string/only_video" />
+
+</menu>

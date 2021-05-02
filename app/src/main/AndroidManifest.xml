@@ -27,7 +27,7 @@
             android:name=".activities.AuthorizationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.main.MainActivity"
             android:screenOrientation="portrait" />
     </application>
 

@@ -1,27 +1,33 @@
 package com.example.domain
 
+import android.content.SharedPreferences
+import android.util.Log
+import com.example.domain.helpers.Constants
 import com.example.domain.interfaces.DatabaseRepository
 import com.example.domain.interfaces.ApiRepository
 import com.example.domain.models.api.*
 import com.example.domain.models.db.PostLocal
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.*
 import okhttp3.MultipartBody
 
 class PostInteractor(
     private val apiRepository: ApiRepository,
-    private val databaseRepository: DatabaseRepository
+    private val databaseRepository: DatabaseRepository,
+    private val preference: SharedPreferences
 ) {
-    private val requestDelayMillis: Long = 400
+    private val requestDelayMillis: Long = 100
 
     fun deleteAllSavedPosts() {
         databaseRepository.deleteAllSavedPosts()
     }
 
-    suspend fun getAllSavedPosts(): Flow<List<PostLocal>> = databaseRepository.getAllPosts()
+    suspend fun getAllSavedPosts(): Flow<List<PostLocal>> {
+        return databaseRepository.getAllPosts(Constants.USER_ID)
+    }
 
     suspend fun savePost(post: Post) {
-        databaseRepository.savePost(post)
+        databaseRepository.savePost(post, Constants.USER_ID)
     }
 
     suspend fun deleteSavedPost(post: Int) = databaseRepository.deletePost(post)
@@ -43,7 +49,7 @@ class PostInteractor(
         return if (news.items == null) {
             delay(requestDelayMillis)
             getNextNewsfeed(key, size)
-        } else news
+        } else findByFilters(news)
     }
 
     suspend fun getNewsfeed(loadSize: Int): Newsfeed {
@@ -51,7 +57,21 @@ class PostInteractor(
         return if (news?.items == null) {
             delay(requestDelayMillis)
             getNewsfeed(loadSize)
-        } else news
+        } else findByFilters(news)
+    }
+
+    private suspend fun findByFilters(news: Newsfeed): Newsfeed {
+        val filterType = preference.getString(Constants.PREF_CONTENT_FILTER, Constants.ATTACHMENTS_ALL_TYPE)
+        val attachments: MutableList<Attachment> = ArrayList()
+        if (filterType != Constants.ATTACHMENTS_ALL_TYPE) {
+            news.items.asFlow().collect { post ->
+                post.attachments?.asFlow()
+                    ?.filter { it.type == filterType }
+                    ?.collect { attachments.add(it) }
+                post.attachments = attachments
+            }
+        }
+        return news
     }
 
     suspend fun getWallUpload(): WallUploadModel = apiRepository.getWallUpload()

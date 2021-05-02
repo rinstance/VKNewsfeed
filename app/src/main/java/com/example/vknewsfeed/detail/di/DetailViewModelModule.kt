@@ -2,13 +2,11 @@ package com.example.vknewsfeed.detail.di
 
 import androidx.lifecycle.ViewModelProvider
 import com.example.domain.PostInteractor
-import com.example.vknewsfeed.MainViewModel
+import com.example.vknewsfeed.NewsMainViewModel
 import com.example.vknewsfeed.detail.DetailPostFragment
 import com.example.vknewsfeed.detail.DetailViewModel
 import com.example.vknewsfeed.di.ViewModelKey
 import com.example.vknewsfeed.di.ViewModelModule
-import com.example.vknewsfeed.newsfeed.NewsfeedFragment
-import com.example.vknewsfeed.newsfeed.NewsfeedViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
@@ -18,7 +16,7 @@ class DetailViewModelModule {
     @Provides
     @IntoMap
     @ViewModelKey(DetailViewModel::class)
-    fun provideDetailViewModel(postInteractor: PostInteractor): MainViewModel {
+    fun provideDetailViewModel(postInteractor: PostInteractor): NewsMainViewModel {
         return DetailViewModel(postInteractor)
     }
 

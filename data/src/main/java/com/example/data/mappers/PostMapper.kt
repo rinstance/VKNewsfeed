@@ -1,6 +1,6 @@
 package com.example.data.mappers
 
-import com.example.data.helpers.Constants
+import com.example.domain.helpers.Constants
 import com.example.data.helpers.getAuthorPostName
 import com.example.data.helpers.getFormatDate
 import com.example.data.helpers.getMaxSizeUrl
@@ -11,10 +11,11 @@ import com.example.domain.models.api.Post
 import com.example.domain.models.api.Video
 import kotlin.collections.ArrayList
 
-fun mapPostToPostLocal(post: Post): PostLocal {
+fun mapPostToPostLocal(post: Post, userId: Int): PostLocal {
     return with(post) {
         PostLocal(
             postId,
+            userId,
             sourceId,
             text,
             getFormatDate(date),

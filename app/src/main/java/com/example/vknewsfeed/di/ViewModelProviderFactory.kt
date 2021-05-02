@@ -2,12 +2,12 @@ package com.example.vknewsfeed.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.vknewsfeed.MainViewModel
+import com.example.vknewsfeed.NewsMainViewModel
 import javax.inject.Inject
 import javax.inject.Provider
 
 class ViewModelProviderFactory @Inject constructor(
-    private val creators: @JvmSuppressWildcards Map<Class<out MainViewModel>, Provider<MainViewModel>>
+    private val creators: @JvmSuppressWildcards Map<Class<out NewsMainViewModel>, Provider<NewsMainViewModel>>
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

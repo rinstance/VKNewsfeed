@@ -7,31 +7,32 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.navigation.ActivityNavigator
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.paging.PagedList
-import com.example.data.helpers.Constants
+import com.example.domain.helpers.Constants
 import com.example.domain.models.api.Post
 import com.example.vknewsfeed.App
 import com.example.vknewsfeed.R
-import com.example.vknewsfeed.activities.MainActivity
-import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedAdapter
-import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedPageKeyedDataSource
+import com.example.vknewsfeed.activities.main.MainActivity
 import com.example.vknewsfeed.fragments.InfoDialogFragment
 import com.example.vknewsfeed.fragments.NewPostDialogFragment
 import com.example.vknewsfeed.fragments.ProgressDialogFragment
 import com.example.vknewsfeed.helpers.getNavigationResult
+import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedAdapter
+import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedPageKeyedDataSource
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_toolbar.*
 import kotlinx.android.synthetic.main.fragment_newsfeed.*
@@ -98,7 +99,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     }
 
     private fun setupDI() {
-        App.appComponent.newsComponentFactory()
+        App.appComponent.newsComponentBuilder()
             .create(this)
             .itemClick { startItemDetailFragment(it.sourceId, it.postId) }
             .likeAction { likeAction(it) }
@@ -111,9 +112,11 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
 
     private fun showSavePostDialog(post: Post) {
         val dialog = InfoDialogFragment()
-        dialog.setMessage(resources.getString(R.string.SAVE_POST_MESSAGE))
-        dialog.setOKListener { savePost(post) }
         dialog.show(childFragmentManager, "saveDialog")
+        dialog.setMessage(resources.getString(R.string.SAVE_POST_MESSAGE))
+        dialog.setOKListener(object : InfoDialogFragment.Listener {
+            override fun ok() = savePost(post)
+        })
     }
 
     private fun savePost(post: Post) {
@@ -121,10 +124,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     }
 
     private fun likeAction(post: Post) {
-        if (post.likes.userLikes == 0)
-            model.setLike(post)
-        else
-            model.deleteLike(post)
+        model.doLike(post)
     }
 
     private fun setupView() {
@@ -150,20 +150,52 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     }
 
     private fun setToolbar() {
-        icon_add_post.setOnClickListener { createNewPostDialog() }
-        icon_log_out.setOnClickListener { showLogoutDialog() }
+        icon_add_post?.setOnClickListener { createNewPostDialog() }
+        icon_log_out?.setOnClickListener { showLogoutDialog() }
+        icon_filters?.setOnClickListener { popupFilters(it) }
         action_back.visibility = View.GONE
         (toolbar_title as TextView).setText(R.string.NEWSFEED)
     }
 
-    private fun showLogoutDialog() {
-        val dialog = InfoDialogFragment()
-        dialog.setMessage(resources.getString(R.string.ARE_YOU_SURE))
-        dialog.setOkText(resources.getString(R.string.LOG_OUT))
-        dialog.setOKListener { logout() }
-        dialog.show(childFragmentManager, "logoutDialog")
+    private fun popupFilters(view: View) {
+        val popupMenu = PopupMenu(parentActivity, view)
+        popupMenu.inflate(R.menu.menu_filters)
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.onlyPhotos -> {
+                    setContentFilter(Constants.ATTACHMENTS_PHOTO_TYPE)
+                    true
+                }
+                R.id.onlyVideos -> {
+                    setContentFilter(Constants.ATTACHMENTS_VIDEO_TYPE)
+                    true
+                }
+                R.id.allFilters -> {
+                    setContentFilter(Constants.ATTACHMENTS_ALL_TYPE)
+                    true
+                }
+                else -> false
+            }
+        }
+        popupMenu.show()
     }
 
+    private fun setContentFilter(type: String) {
+        PreferenceManager.getDefaultSharedPreferences(parentActivity)
+            .edit()
+            .putString(Constants.PREF_CONTENT_FILTER, type)
+            .apply()
+    }
+
+    private fun showLogoutDialog() {
+        val dialog = InfoDialogFragment()
+        dialog.show(childFragmentManager, "logoutDialog")
+        dialog.setMessage(resources.getString(R.string.ARE_YOU_SURE))
+        dialog.setOkText(resources.getString(R.string.LOG_OUT))
+        dialog.setOKListener(object : InfoDialogFragment.Listener {
+            override fun ok() = logout()
+        })
+    }
 
     private fun createNewPostDialog() {
         attachPhoto = null
@@ -209,7 +241,9 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
                 type = "image/*"
                 action = Intent.ACTION_GET_CONTENT
                 startActivityForResult(
-                    Intent.createChooser(this, resources.getString(R.string.SELECT_IMAGE)), REQUEST_CHOOSE_IMAGE)
+                    Intent.createChooser(this, resources.getString(R.string.SELECT_IMAGE)),
+                    REQUEST_CHOOSE_IMAGE
+                )
             }
         }
     }
@@ -217,12 +251,15 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     private fun requestStoragePermission(): Boolean {
         val context = context ?: return false
         val activity = activity ?: return false
-        if (ContextCompat.checkSelfPermission(context,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 activity,
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_CODE_PERMISSION_READ_CONTACTS)
+                REQUEST_CODE_PERMISSION_READ_CONTACTS
+            )
             return false
         }
         return true
@@ -258,7 +295,11 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
         val imageUri = data.data
         val file = File(getPathFromURI(imageUri))
         val requestFile =
-            RequestBody.create(MediaType.parse(imageUri?.let { parentActivity.contentResolver?.getType(it) }), file)
+            RequestBody.create(MediaType.parse(imageUri?.let {
+                parentActivity.contentResolver?.getType(
+                    it
+                )
+            }), file)
         attachPhoto = MultipartBody.Part.createFormData("photo", file.name, requestFile)
         if (attachPhoto != null) newPostDialog.setImage(imageUri)
     }

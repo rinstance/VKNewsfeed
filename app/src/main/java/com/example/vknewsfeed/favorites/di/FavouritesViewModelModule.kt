@@ -2,7 +2,7 @@ package com.example.vknewsfeed.favorites.di
 
 import androidx.lifecycle.ViewModelProvider
 import com.example.domain.PostInteractor
-import com.example.vknewsfeed.MainViewModel
+import com.example.vknewsfeed.NewsMainViewModel
 import com.example.vknewsfeed.di.ViewModelKey
 import com.example.vknewsfeed.di.ViewModelModule
 import com.example.vknewsfeed.favorites.FavouritesFragment
@@ -18,7 +18,7 @@ class FavouritesViewModelModule {
     @Provides
     @IntoMap
     @ViewModelKey(FavouritesViewModel::class)
-    fun provideFavouritesViewModel(postInteractor: PostInteractor, router: AppRouter): MainViewModel =
+    fun provideFavouritesViewModel(postInteractor: PostInteractor, router: AppRouter): NewsMainViewModel =
         FavouritesViewModel(postInteractor, router)
 
     @Provides

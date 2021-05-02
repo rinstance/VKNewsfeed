@@ -1,7 +1,6 @@
 package com.example.vknewsfeed.di
 
-import androidx.lifecycle.ViewModel
-import com.example.vknewsfeed.MainViewModel
+import com.example.vknewsfeed.NewsMainViewModel
 import dagger.MapKey
 import kotlin.reflect.KClass
 
@@ -10,4 +9,4 @@ import kotlin.reflect.KClass
     AnnotationTarget.PROPERTY_SETTER
 )
 @MapKey
-annotation class ViewModelKey(val value: KClass<out MainViewModel>)
+annotation class ViewModelKey(val value: KClass<out NewsMainViewModel>)

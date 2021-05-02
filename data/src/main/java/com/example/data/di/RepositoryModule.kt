@@ -6,6 +6,7 @@ import com.example.data.repository.db.DatabaseRepositoryImpl
 import com.example.data.repository.db.PostDao
 import com.example.domain.interfaces.ApiRepository
 import com.example.domain.interfaces.DatabaseRepository
+import com.google.firebase.database.DatabaseReference
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -18,5 +19,7 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideDbRepository(postDao: PostDao): DatabaseRepository = DatabaseRepositoryImpl(postDao)
+    fun provideDbRepository(
+        postDao: PostDao
+    ): DatabaseRepository = DatabaseRepositoryImpl(postDao)
 }

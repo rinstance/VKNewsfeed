@@ -4,8 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
-import com.example.data.helpers.Constants
+import com.example.domain.helpers.Constants
 import com.example.vknewsfeed.R
+import com.example.vknewsfeed.activities.main.MainActivity
 
 class SplashActivity : AppCompatActivity() {
 
@@ -13,6 +14,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         val preference = PreferenceManager.getDefaultSharedPreferences(this)
+
         if (preference.getBoolean(Constants.PREFERENCE_IS_AUTH, false))
             startActivity(
                 Intent(this, MainActivity::class.java)

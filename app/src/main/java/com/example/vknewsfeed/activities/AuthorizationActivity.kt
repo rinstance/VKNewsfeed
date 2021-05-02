@@ -9,8 +9,9 @@ import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.TextView
-import com.example.data.helpers.Constants
+import com.example.domain.helpers.Constants
 import com.example.vknewsfeed.R
+import com.example.vknewsfeed.activities.main.MainActivity
 import com.example.vknewsfeed.helpers.loadUrlWebView
 import kotlinx.android.synthetic.main.activity_authorization.*
 import kotlinx.android.synthetic.main.custom_toolbar.*

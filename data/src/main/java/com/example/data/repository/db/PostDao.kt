@@ -2,13 +2,12 @@ package com.example.data.repository.db
 
 import androidx.room.*
 import com.example.domain.models.db.PostLocal
-import io.reactivex.Completable
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PostDao {
-    @Query("SELECT * FROM postLocal")
-    fun getAll(): Flow<List<PostLocal>>
+    @Query("SELECT * FROM postLocal WHERE userId = :userId")
+    fun getAll(userId: Int): Flow<List<PostLocal>>
 
     @Query("SELECT * FROM postLocal WHERE id = :id")
     fun getById(id: Int): Flow<PostLocal>

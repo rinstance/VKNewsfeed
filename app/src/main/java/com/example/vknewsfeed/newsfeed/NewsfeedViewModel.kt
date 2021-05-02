@@ -1,21 +1,22 @@
 package com.example.vknewsfeed.newsfeed
 
 import androidx.lifecycle.viewModelScope
-import com.example.data.helpers.Constants
+import com.example.domain.helpers.Constants
 import com.example.domain.PostInteractor
 import com.example.domain.models.api.Post
 import com.example.domain.models.api.SavedPost
-import com.example.vknewsfeed.MainViewModel
+import com.example.vknewsfeed.NewsMainViewModel
 import com.example.vknewsfeed.R
+import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedPageKeyedDataSource
 import com.example.vknewsfeed.routers.AppRouter
-import com.google.android.play.core.internal.s
 import kotlinx.coroutines.*
 import okhttp3.MultipartBody
 
 class NewsfeedViewModel(
     private val postInteractor: PostInteractor,
-    private val router: AppRouter
-) : MainViewModel(postInteractor) {
+    private val router: AppRouter,
+    private val dataSource: NewsfeedPageKeyedDataSource
+) : NewsMainViewModel(postInteractor) {
 
     suspend fun createPost(photo: MultipartBody.Part?, message: String): SavedPost {
         return withContext(Dispatchers.IO) {

@@ -1,3 +1,4 @@
+
 package com.example.vknewsfeed.favorites
 
 import android.os.Bundle
@@ -8,7 +9,7 @@ import android.view.ViewGroup
 import com.example.domain.models.db.PostLocal
 import com.example.vknewsfeed.App
 import com.example.vknewsfeed.R
-import com.example.vknewsfeed.activities.MainActivity
+import com.example.vknewsfeed.activities.main.MainActivity
 import com.example.vknewsfeed.favorites.adapters.FavouritePostsAdapter
 import com.example.vknewsfeed.fragments.InfoDialogFragment
 import com.example.vknewsfeed.fragments.ProgressDialogFragment
@@ -25,8 +26,7 @@ class FavouritesFragment : Fragment(), CoroutineScope {
         get() = SupervisorJob() + Dispatchers.Main
     private lateinit var adapter: FavouritePostsAdapter
     private lateinit var progressDialog: ProgressDialogFragment
-    @Inject
-    lateinit var model: FavouritesViewModel
+    @Inject lateinit var model: FavouritesViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,8 +41,10 @@ class FavouritesFragment : Fragment(), CoroutineScope {
     }
 
     private fun setDI() {
-        App.appComponent.favouritesComponentFactory()
+        App.appComponent.favouritesComponentBuilder()
             .create(this)
+            .itemClick { startDetailFragment(it) }
+            .longClick { showDeletePostDialog(it) }
             .router(activity as MainActivity)
             .build()
             .inject(this)
@@ -67,10 +69,12 @@ class FavouritesFragment : Fragment(), CoroutineScope {
 
     private fun showDeletePostDialog(post: PostLocal) {
         val dialog = InfoDialogFragment()
+        dialog.show(childFragmentManager, "deletePost")
         dialog.setMessage(resources.getString(R.string.DELETE_POST_MESSAGE))
         dialog.setOkText(resources.getString(R.string.DELETE))
-        dialog.setOKListener { model.deletePost(post.id) }
-        dialog.show(childFragmentManager, "deletePost")
+        dialog.setOKListener(object : InfoDialogFragment.Listener {
+            override fun ok() = model.deletePost(post.id)
+        })
     }
 
     private fun startDetailFragment(post: PostLocal) {
