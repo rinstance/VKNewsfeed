@@ -7,6 +7,7 @@ import com.example.vknewsfeed.detail.DetailPostFragment
 import com.example.vknewsfeed.detail.DetailViewModel
 import com.example.vknewsfeed.di.ViewModelKey
 import com.example.vknewsfeed.di.ViewModelModule
+import com.example.vknewsfeed.routers.AppRouter
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
@@ -16,8 +17,11 @@ class DetailViewModelModule {
     @Provides
     @IntoMap
     @ViewModelKey(DetailViewModel::class)
-    fun provideDetailViewModel(postInteractor: PostInteractor): NewsMainViewModel {
-        return DetailViewModel(postInteractor)
+    fun provideDetailViewModel(
+        postInteractor: PostInteractor,
+        router: AppRouter
+    ): NewsMainViewModel {
+        return DetailViewModel(postInteractor, router)
     }
 
     @Provides
@@ -25,6 +29,9 @@ class DetailViewModelModule {
         fragment: DetailPostFragment,
         viewModelFactory: ViewModelProvider.Factory
     ): DetailViewModel {
-        return ViewModelProvider(fragment.requireActivity(), viewModelFactory).get(DetailViewModel::class.java)
+        return ViewModelProvider(
+            fragment.requireActivity(),
+            viewModelFactory
+        ).get(DetailViewModel::class.java)
     }
 }

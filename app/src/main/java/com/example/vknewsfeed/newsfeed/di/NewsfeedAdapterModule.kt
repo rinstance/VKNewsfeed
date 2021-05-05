@@ -4,6 +4,7 @@ import androidx.paging.PagedList
 import com.example.domain.helpers.Constants
 import com.example.domain.PostInteractor
 import com.example.domain.models.api.Post
+import com.example.vknewsfeed.di.MainScope
 import com.example.vknewsfeed.newsfeed.adapters.newsfeed.PostDiffUtilCallback
 import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedAdapter
 import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedPageKeyedDataSource
@@ -12,6 +13,7 @@ import dagger.Module
 import dagger.Provides
 import java.util.concurrent.Executors
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 class NewsfeedAdapterModule {
@@ -34,6 +36,7 @@ class NewsfeedAdapterModule {
         .build()
 
     @Provides
+    @MainScope
     fun getDataSource(postInteractor: PostInteractor): NewsfeedPageKeyedDataSource =
         NewsfeedPageKeyedDataSource(postInteractor)
 

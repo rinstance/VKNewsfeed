@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import com.example.domain.models.db.PostLocal
 import com.example.vknewsfeed.App
 import com.example.vknewsfeed.R
@@ -22,11 +23,8 @@ import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class FavouritesFragment : Fragment(), CoroutineScope {
-    override val coroutineContext: CoroutineContext
-        get() = SupervisorJob() + Dispatchers.Main
+class FavouritesFragment : Fragment() {
     private lateinit var adapter: FavouritePostsAdapter
-    private lateinit var progressDialog: ProgressDialogFragment
     @Inject lateinit var model: FavouritesViewModel
 
     override fun onCreateView(
@@ -38,7 +36,7 @@ class FavouritesFragment : Fragment(), CoroutineScope {
         super.onViewCreated(view, savedInstanceState)
         setDI()
         setView()
-        launch(coroutineContext) { setPosts() }
+        setPosts()
     }
 
     private fun setDI() {
@@ -51,21 +49,19 @@ class FavouritesFragment : Fragment(), CoroutineScope {
             .inject(this)
     }
 
-    private suspend fun setPosts() {
+    private fun setPosts() {
         adapter = FavouritePostsAdapter(
             itemClick = { startDetailFragment(it) },
             longClick = { showDeletePostDialog(it) }
         )
         recycler_favourites?.adapter = this.adapter
-        model.getSavedPosts().collect {
+        model.mutableSavedPosts.observe(viewLifecycleOwner, Observer {
             if (this@FavouritesFragment.isVisible) {
-                showProgressDialog()
                 if (it.isEmpty())
                     text_no_posts?.visibility = View.VISIBLE
                 adapter.submitList(it)
-                hideProgressDialog()
             }
-        }
+        })
     }
 
     private fun showDeletePostDialog(post: PostLocal) {
@@ -91,14 +87,5 @@ class FavouritesFragment : Fragment(), CoroutineScope {
 
     private fun deleteAllPosts() {
         model.deleteAllPosts()
-    }
-
-    private fun showProgressDialog() {
-        progressDialog = ProgressDialogFragment()
-        progressDialog.show(childFragmentManager, DialogConstants.LOADING)
-    }
-
-    private fun hideProgressDialog() {
-        progressDialog.dismiss()
     }
 }

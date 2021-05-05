@@ -6,6 +6,7 @@ import com.example.vknewsfeed.newsfeed.NewsfeedFragment
 import com.example.vknewsfeed.newsfeed.di.NewsfeedAdapterModule
 import com.example.vknewsfeed.newsfeed.di.NewsfeedComponent
 import com.example.vknewsfeed.newsfeed.di.NewsfeedViewModelModule
+import com.example.vknewsfeed.routers.AppRouter
 import dagger.BindsInstance
 import dagger.Subcomponent
 
@@ -18,7 +19,10 @@ import dagger.Subcomponent
 interface DetailComponent {
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance fragment: DetailPostFragment): DetailComponent
+        fun create(
+            @BindsInstance fragment: DetailPostFragment,
+            @BindsInstance router: AppRouter
+        ): DetailComponent
     }
 
     fun inject(fragment: DetailPostFragment)

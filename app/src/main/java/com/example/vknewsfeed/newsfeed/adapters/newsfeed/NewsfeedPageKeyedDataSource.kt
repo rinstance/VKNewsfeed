@@ -46,21 +46,12 @@ class NewsfeedPageKeyedDataSource(
         launch(coroutineContext) {
             showLoadingProgressBar()
             val newsfeed = postInteractor.getNewsfeed(params.requestedLoadSize)
+            Log.d("loggg", "ere $newsfeed")
             val posts = newsfeed.items
             postInteractor.getAuthors(posts)
-            getVideos(ArrayList(posts))
+            postInteractor.getVideosForPosts(ArrayList(posts))
             showNews(newsfeed, posts)
             hideLoadingProgressBar()
-        }
-    }
-
-    private suspend fun getVideos(posts: ArrayList<Post>) {
-        posts.forEach { post ->
-            post.attachments?.forEach {
-                if (it.type == Constants.ATTACHMENTS_VIDEO_TYPE) {
-                    postInteractor.getVideo(post, it)
-                }
-            }
         }
     }
 
@@ -72,7 +63,7 @@ class NewsfeedPageKeyedDataSource(
                 postInteractor.getNextNewsfeed(params.key, params.requestedLoadSize)
             val posts = newsfeed.items
             postInteractor.getAuthors(posts)
-            getVideos(ArrayList(posts))
+            postInteractor.getVideosForPosts(ArrayList(posts))
             showNews(newsfeed, posts)
             hideLoadingProgressBar()
         }

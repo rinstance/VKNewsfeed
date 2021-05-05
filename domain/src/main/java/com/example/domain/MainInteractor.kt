@@ -2,6 +2,7 @@ package com.example.domain
 
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.util.Log
 import com.example.domain.helpers.Constants
 
 class MainInteractor(
@@ -28,4 +29,7 @@ class MainInteractor(
         return tokenOrNull != null && userIdOrNull != null
     }
 
+    fun setPreferenceLogout() {
+        preferences.edit().putBoolean(Constants.PREFERENCE_IS_AUTH, false).apply()
+    }
 }

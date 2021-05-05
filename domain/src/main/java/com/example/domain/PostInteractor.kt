@@ -1,7 +1,6 @@
 package com.example.domain
 
 import android.content.SharedPreferences
-import android.util.Log
 import com.example.domain.helpers.Constants
 import com.example.domain.interfaces.DatabaseRepository
 import com.example.domain.interfaces.ApiRepository
@@ -11,12 +10,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import okhttp3.MultipartBody
 
+const val requestDelayMillis: Long = 400
+
 class PostInteractor(
     private val apiRepository: ApiRepository,
     private val databaseRepository: DatabaseRepository,
     private val preference: SharedPreferences
 ) {
-    private val requestDelayMillis: Long = 100
 
     fun deleteAllSavedPosts() {
         databaseRepository.deleteAllSavedPosts()
@@ -49,19 +49,20 @@ class PostInteractor(
         return if (news.items == null) {
             delay(requestDelayMillis)
             getNextNewsfeed(key, size)
-        } else findByFilters(news)
+        } else news
     }
 
     suspend fun getNewsfeed(loadSize: Int): Newsfeed {
-        val news= apiRepository.getNewsfeed(loadSize)
+        val news = apiRepository.getNewsfeed(loadSize)
         return if (news?.items == null) {
             delay(requestDelayMillis)
             getNewsfeed(loadSize)
-        } else findByFilters(news)
+        } else news
     }
 
     private suspend fun findByFilters(news: Newsfeed): Newsfeed {
-        val filterType = preference.getString(Constants.PREF_CONTENT_FILTER, Constants.ATTACHMENTS_ALL_TYPE)
+        val filterType =
+            preference.getString(Constants.PREF_CONTENT_FILTER, Constants.ATTACHMENTS_ALL_TYPE)
         val attachments: MutableList<Attachment> = ArrayList()
         if (filterType != Constants.ATTACHMENTS_ALL_TYPE) {
             news.items.asFlow().collect { post ->
@@ -117,6 +118,32 @@ class PostInteractor(
             if (video.response.items.isNotEmpty())
                 return video.response.items[0]
             else return null
+        }
+    }
+
+    suspend fun createPost(photo: MultipartBody.Part?, message: String): SavedPost {
+        return if (photo != null) {
+            val wallUploadResponse = getWallUpload()
+            val wallUploadData = getWallUploadData(wallUploadResponse.uploadUrl, photo)
+            val savePhotoModel = saveWallPhoto(
+                wallUploadData.photo,
+                wallUploadData.hash,
+                wallUploadData.server,
+                wallUploadResponse.userId
+            )
+            wallPost(message, "photo${Constants.USER_ID}_${savePhotoModel.id}")
+        } else {
+            wallPost(message, "")
+        }
+    }
+
+    suspend fun getVideosForPosts(posts: java.util.ArrayList<Post>) {
+        posts.forEach { post ->
+            post.attachments?.forEach {
+                if (it.type == Constants.ATTACHMENTS_VIDEO_TYPE) {
+                    getVideo(post, it)
+                }
+            }
         }
     }
 }

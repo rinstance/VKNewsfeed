@@ -8,4 +8,8 @@ class MainPresenter(
     private val mainInteractor: MainInteractor
 ) {
     fun setupData(): Boolean = mainInteractor.setStartData()
+
+    fun logout() {
+        mainInteractor.setPreferenceLogout()
+    }
 }

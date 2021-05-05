@@ -2,6 +2,7 @@ package com.example.vknewsfeed.activities.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import com.example.vknewsfeed.App
 import com.example.vknewsfeed.R
 import com.example.vknewsfeed.activities.auth.AuthorizationActivity
 import com.example.vknewsfeed.fragments.ProgressDialogFragment
+import com.example.vknewsfeed.helpers.DialogConstants
 import com.example.vknewsfeed.routers.AppRouter
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -63,5 +65,19 @@ class MainActivity : AppCompatActivity(), AppRouter {
         }
         bottom_nav_view?.visibility = View.GONE
         navController.navigate(R.id.action_to_detail_post, bundle)
+    }
+
+    override fun openAuthActivity() {
+        presenter.logout()
+        navController.navigate(R.id.action_to_auth_activity)
+    }
+
+    override fun showProgressBar() {
+        progressDialog = ProgressDialogFragment()
+        progressDialog.show(supportFragmentManager, DialogConstants.LOADING)
+    }
+
+    override fun hideProgressBar() {
+        progressDialog.dismiss()
     }
 }

@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
-import androidx.navigation.ActivityNavigator
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.paging.PagedList
@@ -58,9 +58,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
         get() = SupervisorJob() + Dispatchers.Main
     private lateinit var parentActivity: FragmentActivity
     private lateinit var newPostDialog: NewPostDialogFragment
-    private lateinit var progressDialog: ProgressDialogFragment
     private lateinit var loadingProgressChannel: Channel<Boolean>
-    private lateinit var navController: NavController
     private var isLoadingPosts = false
     private var attachPhoto: MultipartBody.Part? = null
     @Inject lateinit var model: NewsfeedViewModel
@@ -77,7 +75,6 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
         setupDI()
         launch(coroutineContext) { setLoadingProgressBar() }
         loadingProgressChannel = (items.dataSource as NewsfeedPageKeyedDataSource).loadingProgress
-        navController = NavHostFragment.findNavController(this)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -221,20 +218,8 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     }
 
     private fun createPostAndShow(message: String) {
-        launch(coroutineContext) {
-            showProgressDialog()
-            val postId = model.createPost(attachPhoto, message).response.postId
-            hideProgressDialog()
-            startItemDetailFragment(Constants.USER_ID, postId)
-        }
+        model.createPostAndShow(attachPhoto, message)
     }
-
-    private fun showProgressDialog() {
-        progressDialog = ProgressDialogFragment()
-        progressDialog.show(childFragmentManager, DialogConstants.LOADING)
-    }
-
-    private fun hideProgressDialog() = progressDialog.dismiss()
 
     private fun chooseImage() {
         if (requestStoragePermission()) {
@@ -335,16 +320,6 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     }
 
     private fun logout() {
-//        model.logout()
-        PreferenceManager.getDefaultSharedPreferences(parentActivity)
-            .edit().putBoolean(Constants.PREFERENCE_IS_AUTH, false).apply()
-        val extras = ActivityNavigator.Extras.Builder()
-            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            .build()
-        navController.navigate(R.id.action_to_auth_activity)
-//        startActivity(
-//            Intent(this, AuthorizationActivity::class.java)
-//            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+        model.logout();
     }
 }

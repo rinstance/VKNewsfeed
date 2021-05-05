@@ -1,8 +1,9 @@
 package com.example.domain.helpers
 
 object Constants {
+    const val api = "5.124"
     const val FILTERS_FOR_NEWS = "post"
-    const val COUNT_FOR_NEWS = 8
+    const val COUNT_FOR_NEWS = 4
     const val FILTERS_FOR_USER = "photo_50"
     const val LIKE_TYPE = "post"
     const val IMAGE_TYPE_INTENT = "image/*"
