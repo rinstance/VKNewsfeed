@@ -1,6 +1,7 @@
 package com.example.vknewsfeed.detail
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -111,9 +112,6 @@ class DetailPostFragment : Fragment() {
 
     private fun close() {
         Bundle().apply {
-            post?.let {
-
-            }
             putInt(Constants.INTENT_POST_ID, post.postId)
             putInt(Constants.INTENT_LIKE_COUNT, post.likes.count)
             putInt(Constants.INTENT_USER_LIKE, post.likes.userLikes)

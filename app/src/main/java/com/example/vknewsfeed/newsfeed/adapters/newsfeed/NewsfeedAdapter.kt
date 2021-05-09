@@ -2,6 +2,7 @@ package com.example.vknewsfeed.newsfeed.adapters.newsfeed
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import com.example.domain.models.api.Post
 import com.example.vknewsfeed.R

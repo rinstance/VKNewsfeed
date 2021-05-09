@@ -15,6 +15,7 @@ class ProgressDialogFragment : DialogFragment() {
         val view = inflater.inflate(R.layout.dialog_fragment_progressbar, null)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        isCancelable = false
         return view
     }
 }

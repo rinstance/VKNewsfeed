@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "354211657991",
+    "firebase_url": "https://vknewsfeed-3bcc0-default-rtdb.firebaseio.com",
+    "project_id": "vknewsfeed-3bcc0",
+    "storage_bucket": "vknewsfeed-3bcc0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:354211657991:android:912b16b9acc5931bed2da2",
+        "android_client_info": {
+          "package_name": "com.example.vknewsfeed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "354211657991-1edkbik7ddecrio0p01u0fkn3no6ldhe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcAgR7fEJGA3r1giUYpUUTOpU_Ba_GfWo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "354211657991-1edkbik7ddecrio0p01u0fkn3no6ldhe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

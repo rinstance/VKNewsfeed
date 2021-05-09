@@ -1,8 +1,10 @@
 package com.example.vknewsfeed.newsfeed.di
 
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.PagedList
 import com.example.domain.PostInteractor
-import com.example.vknewsfeed.NewsMainViewModel
+import com.example.domain.models.api.Post
+import com.example.vknewsfeed.MainViewModel
 import com.example.vknewsfeed.di.ViewModelKey
 import com.example.vknewsfeed.di.ViewModelModule
 import com.example.vknewsfeed.newsfeed.NewsfeedFragment
@@ -22,9 +24,10 @@ class NewsfeedViewModelModule {
     fun provideNewsViewModel(
         postInteractor: PostInteractor,
         router: AppRouter,
-        dataSource: NewsfeedPageKeyedDataSource
-    ): NewsMainViewModel {
-        return NewsfeedViewModel(postInteractor, router, dataSource)
+        dataSource: NewsfeedPageKeyedDataSource,
+        items: PagedList<Post>
+    ): MainViewModel {
+        return NewsfeedViewModel(postInteractor, router, dataSource, items)
     }
 
     @Provides

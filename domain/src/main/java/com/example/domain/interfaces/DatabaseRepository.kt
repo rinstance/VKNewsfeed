@@ -12,6 +12,12 @@ interface DatabaseRepository {
 
     suspend fun deletePost(postId: Int)
 
+    suspend fun cachePost(post: Post)
+
+    suspend fun getCachePosts(): List<Post>
+
+    suspend fun clearCachePosts()
+
     fun deleteAllSavedPosts()
 
 }

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,9 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.paging.PagedList
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.domain.helpers.Constants
 import com.example.domain.models.api.Post
 import com.example.vknewsfeed.App
@@ -29,20 +26,15 @@ import com.example.vknewsfeed.R
 import com.example.vknewsfeed.activities.main.MainActivity
 import com.example.vknewsfeed.fragments.InfoDialogFragment
 import com.example.vknewsfeed.fragments.NewPostDialogFragment
-import com.example.vknewsfeed.fragments.ProgressDialogFragment
 import com.example.vknewsfeed.helpers.DialogConstants
 import com.example.vknewsfeed.helpers.getNavigationResult
 import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedAdapter
-import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedPageKeyedDataSource
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_toolbar.*
 import kotlinx.android.synthetic.main.fragment_newsfeed.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -58,11 +50,8 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
         get() = SupervisorJob() + Dispatchers.Main
     private lateinit var parentActivity: FragmentActivity
     private lateinit var newPostDialog: NewPostDialogFragment
-    private lateinit var loadingProgressChannel: Channel<Boolean>
-    private var isLoadingPosts = false
     private var attachPhoto: MultipartBody.Part? = null
     @Inject lateinit var model: NewsfeedViewModel
-    @Inject lateinit var items: PagedList<Post>
     @Inject lateinit var adapter: NewsfeedAdapter
 
     override fun onCreateView(
@@ -73,18 +62,6 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupDI()
-        launch(coroutineContext) { setLoadingProgressBar() }
-        loadingProgressChannel = (items.dataSource as NewsfeedPageKeyedDataSource).loadingProgress
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        setIndicatorAfterRestored()
-    }
-
-    private fun setIndicatorAfterRestored() {
-        if (isLoadingPosts) progress_indicator?.show()
-        else progress_indicator?.hide()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -98,7 +75,6 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
 
     private fun setupDI() {
         App.appComponent.newsComponentBuilder()
-            .create(this)
             .itemClick { startItemDetailFragment(it.sourceId, it.postId) }
             .likeAction { likeAction(it) }
             .longClick { showSavePostDialog(it) }
@@ -130,16 +106,6 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
         setToolbar()
         setAdapter()
         updateAdapterAfterLike()
-    }
-
-    private suspend fun setLoadingProgressBar() {
-        loadingProgressChannel.consumeEach { isLoading ->
-            isLoadingPosts = isLoading
-            if (isLoading)
-                progress_indicator?.show()
-            else
-                progress_indicator?.hide()
-        }
     }
 
     private fun initActivity() {
@@ -179,10 +145,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     }
 
     private fun setContentFilter(type: String) {
-        PreferenceManager.getDefaultSharedPreferences(parentActivity)
-            .edit()
-            .putString(Constants.PREF_CONTENT_FILTER, type)
-            .apply()
+        model.setFilterType(type)
     }
 
     private fun showLogoutDialog() {
@@ -207,9 +170,9 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
             }
 
             override fun attachImage(isSelected: Boolean) {
-                if (!isSelected)
+                if (!isSelected) {
                     chooseImage()
-                else {
+                } else {
                     newPostDialog.deleteImage()
                     attachPhoto = null
                 }
@@ -264,17 +227,7 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     }
 
     private fun updateLikes(bundle: Bundle) {
-        val postId = bundle.getInt(Constants.INTENT_POST_ID, 0)
-        val likeCount = bundle.getInt(Constants.INTENT_LIKE_COUNT, 0)
-        val userLike = bundle.getInt(Constants.INTENT_USER_LIKE, 0)
-        items.forEach { item ->
-            if (item.postId == postId) {
-                item.likes.count = likeCount
-                item.likes.userLikes = userLike
-                adapter.notifyItemChanged(items.indexOf(item))
-                return
-            }
-        }
+        model.updateLikes(bundle)
     }
 
     private fun chooseImageResult(data: Intent) {
@@ -282,11 +235,9 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
         val file = File(getPathFromURI(imageUri))
         val requestFile =
             RequestBody.create(MediaType.parse(imageUri?.let {
-                parentActivity.contentResolver?.getType(
-                    it
-                )
+                parentActivity.contentResolver?.getType(it)
             }), file)
-        attachPhoto = MultipartBody.Part.createFormData("photo", file.name, requestFile)
+        attachPhoto = MultipartBody.Part.createFormData(Constants.ATTACHMENTS_PHOTO_TYPE, file.name, requestFile)
         if (attachPhoto != null) newPostDialog.setImage(imageUri)
     }
 
@@ -300,13 +251,30 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
 
     private fun updateAdapterAfterLike() {
         model.mutableItemAfterLike.observe(viewLifecycleOwner, Observer { post: Post ->
-            adapter.notifyItemChanged(items.indexOf(post))
+            adapter.notifyItemChanged(model.items.indexOf(post))
         })
     }
 
     private fun setAdapter() {
-        adapter.submitList(items)
+        setLoadingProgressBar()
+        setAdapterList()
+        adapter.submitList(model.items)
         newsfeed_recyclerview.adapter = adapter
+    }
+
+    private fun setLoadingProgressBar() {
+        model.mutableLoading.observe(viewLifecycleOwner, Observer {
+            if (it)
+                progress_indicator?.show()
+            else
+                progress_indicator?.hide()
+        })
+    }
+
+    private fun setAdapterList() {
+        model.mutablePosts.observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it)
+        })
     }
 
     override fun onRequestPermissionsResult(
@@ -320,6 +288,6 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     }
 
     private fun logout() {
-        model.logout();
+        model.logout()
     }
 }

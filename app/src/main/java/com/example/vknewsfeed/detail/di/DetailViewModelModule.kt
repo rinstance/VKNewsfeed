@@ -2,7 +2,7 @@ package com.example.vknewsfeed.detail.di
 
 import androidx.lifecycle.ViewModelProvider
 import com.example.domain.PostInteractor
-import com.example.vknewsfeed.NewsMainViewModel
+import com.example.vknewsfeed.MainViewModel
 import com.example.vknewsfeed.detail.DetailPostFragment
 import com.example.vknewsfeed.detail.DetailViewModel
 import com.example.vknewsfeed.di.ViewModelKey
@@ -20,7 +20,7 @@ class DetailViewModelModule {
     fun provideDetailViewModel(
         postInteractor: PostInteractor,
         router: AppRouter
-    ): NewsMainViewModel {
+    ): MainViewModel {
         return DetailViewModel(postInteractor, router)
     }
 

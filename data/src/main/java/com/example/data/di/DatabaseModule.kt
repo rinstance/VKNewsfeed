@@ -2,10 +2,8 @@ package com.example.data.di
 
 import android.content.Context
 import com.example.data.repository.db.AppDatabase
-import com.example.data.repository.db.PostDao
-import com.example.domain.helpers.Constants
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.example.data.repository.db.PostCacheDao
+import com.example.data.repository.db.PostLocalDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -20,6 +18,9 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun providePostDao(database: AppDatabase): PostDao = database.postDao()
+    fun providePostDao(database: AppDatabase): PostLocalDao = database.postLocalDao()
 
+    @Provides
+    @Singleton
+    fun providePostCacheDao(database: AppDatabase): PostCacheDao = database.postCacheDao()
 }

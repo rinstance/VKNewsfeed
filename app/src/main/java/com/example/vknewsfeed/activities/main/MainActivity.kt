@@ -52,7 +52,8 @@ class MainActivity : AppCompatActivity(), AppRouter {
     }
 
     private fun setBottomNavigation() {
-        bottom_nav_view.setupWithNavController(navController)
+        bottom_nav_view?.setOnNavigationItemReselectedListener {  }
+        bottom_nav_view?.setupWithNavController(navController)
     }
 
     override fun showToast(textId: Int) =
@@ -79,5 +80,12 @@ class MainActivity : AppCompatActivity(), AppRouter {
 
     override fun hideProgressBar() {
         progressDialog.dismiss()
+    }
+
+    override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
+
+    override fun onDestroy() {
+        presenter.close()
+        super.onDestroy()
     }
 }

@@ -1,14 +1,17 @@
 package com.example.domain
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.example.domain.helpers.Constants
 import com.example.domain.interfaces.DatabaseRepository
 import com.example.domain.interfaces.ApiRepository
 import com.example.domain.models.api.*
+import com.example.domain.models.api.video.ResponseVideo
 import com.example.domain.models.db.PostLocal
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import okhttp3.MultipartBody
+import kotlin.collections.ArrayList
 
 const val requestDelayMillis: Long = 400
 
@@ -37,7 +40,7 @@ class PostInteractor(
     }
 
     private suspend fun getAuthor(sourceId: Int): PostAuthor {
-        val authors = apiRepository.getAuthors(sourceId)
+        val authors: List<PostAuthor>? = apiRepository.getAuthors(sourceId)
         return if (authors == null) {
             delay(requestDelayMillis)
             getAuthor(sourceId)
@@ -45,49 +48,68 @@ class PostInteractor(
     }
 
     suspend fun getNextNewsfeed(key: String, size: Int): Newsfeed {
-        val news = apiRepository.getNextNewsfeed(key, size)
-        return if (news.items == null) {
+        val news: Newsfeed? = apiRepository.getNextNewsfeed(key, size)
+        return if (news?.posts == null) {
             delay(requestDelayMillis)
             getNextNewsfeed(key, size)
-        } else news
+        } else {
+            getNewsData(news)
+            findByFilters(news)
+        }
     }
 
     suspend fun getNewsfeed(loadSize: Int): Newsfeed {
-        val news = apiRepository.getNewsfeed(loadSize)
-        return if (news?.items == null) {
+        val news: Newsfeed? = apiRepository.getNewsfeed(loadSize)
+        return if (news?.posts == null) {
             delay(requestDelayMillis)
             getNewsfeed(loadSize)
-        } else news
+        } else {
+            getNewsData(news)
+            findByFilters(news)
+        }
+    }
+
+    private suspend fun getNewsData(news: Newsfeed) {
+        getAuthors(news.posts)
+        getVideosForPosts(news.posts)
     }
 
     private suspend fun findByFilters(news: Newsfeed): Newsfeed {
         val filterType =
             preference.getString(Constants.PREF_CONTENT_FILTER, Constants.ATTACHMENTS_ALL_TYPE)
-        val attachments: MutableList<Attachment> = ArrayList()
+        val posts: MutableList<Post> = ArrayList()
         if (filterType != Constants.ATTACHMENTS_ALL_TYPE) {
-            news.items.asFlow().collect { post ->
-                post.attachments?.asFlow()
-                    ?.filter { it.type == filterType }
-                    ?.collect { attachments.add(it) }
-                post.attachments = attachments
+            news.posts.asFlow().filter { post ->
+                val flag = post.attachments?.any { it.type == filterType }
+                flag != null && flag
+            }.collect {
+                posts.add(it)
             }
+            news.posts = posts
         }
         return news
     }
 
-    suspend fun getWallUpload(): WallUploadModel = apiRepository.getWallUpload()
+    private suspend fun cachePosts(posts: List<Post>) {
+        posts.forEach { databaseRepository.cachePost(it) }
+    }
 
-    suspend fun getWallUploadData(uploadUrl: String, photo: MultipartBody.Part): WallUploadData =
+    private suspend fun getWallUpload(): WallUploadModel = apiRepository.getWallUpload()
+
+    private suspend fun getWallUploadData(
+        uploadUrl: String,
+        photo: MultipartBody.Part
+    ): WallUploadData =
         apiRepository.getWallUploadData(uploadUrl, photo)
 
-    suspend fun saveWallPhoto(
+    private suspend fun saveWallPhoto(
         photo: String,
         hash: String,
         server: Int,
         userId: Int
     ): SavePhotoModel = apiRepository.saveWallPhoto(photo, hash, server, userId)
 
-    suspend fun wallPost(message: String, attachments: String): SavedPost =
+    private suspend fun wallPost(message: String, attachments: String): SavedPost =
         apiRepository.wallPost(message, attachments)
 
     suspend fun setLike(post: Post): Int = apiRepository.setLike(post)
@@ -110,14 +132,14 @@ class PostInteractor(
     }
 
     private suspend fun getVideoById(videoId: String): Video? {
-        val video = apiRepository.getVideoById(videoId)
-        return if (video.response == null) {
+        val video: ResponseVideo? = apiRepository.getVideoById(videoId)
+        return if (video?.response == null) {
             delay(requestDelayMillis)
             getVideoById(videoId)
         } else {
-            if (video.response.items.isNotEmpty())
-                return video.response.items[0]
-            else return null
+            return if (video.response.items.isNotEmpty())
+                video.response.items[0]
+            else null
         }
     }
 
@@ -137,7 +159,7 @@ class PostInteractor(
         }
     }
 
-    suspend fun getVideosForPosts(posts: java.util.ArrayList<Post>) {
+    private suspend fun getVideosForPosts(posts: List<Post>) {
         posts.forEach { post ->
             post.attachments?.forEach {
                 if (it.type == Constants.ATTACHMENTS_VIDEO_TYPE) {
@@ -145,5 +167,13 @@ class PostInteractor(
                 }
             }
         }
+    }
+
+    suspend fun clearCachedPosts() {
+        databaseRepository.clearCachePosts()
+    }
+
+    fun setFilterType(type: String) {
+        preference.edit().putString(Constants.PREF_CONTENT_FILTER, type).apply()
     }
 }

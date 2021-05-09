@@ -11,7 +11,7 @@ import com.example.vknewsfeed.routers.AppRouter
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-open class NewsMainViewModel(
+open class MainViewModel(
     private val postInteractor: PostInteractor
 ) : ViewModel(), CoroutineScope {
     override val coroutineContext: CoroutineContext

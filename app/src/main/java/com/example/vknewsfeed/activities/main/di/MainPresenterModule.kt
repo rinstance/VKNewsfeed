@@ -1,15 +1,17 @@
 package com.example.vknewsfeed.activities.main.di
 
-import android.content.SharedPreferences
 import com.example.domain.MainInteractor
+import com.example.domain.PostInteractor
 import com.example.vknewsfeed.activities.main.MainPresenter
-import com.example.vknewsfeed.di.ViewModelModule
 import dagger.Module
 import dagger.Provides
 
 @Module
 class MainPresenterModule {
     @Provides
-    fun provideMainPresenter(mainInteractor: MainInteractor): MainPresenter =
-        MainPresenter(mainInteractor)
+    fun provideMainPresenter(
+        mainInteractor: MainInteractor,
+        postInteractor: PostInteractor
+    ): MainPresenter =
+        MainPresenter(mainInteractor, postInteractor)
 }

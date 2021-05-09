@@ -1,13 +1,15 @@
 package com.example.vknewsfeed.newsfeed
 
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagedList
 import com.example.domain.PostInteractor
 import com.example.domain.helpers.Constants
 import com.example.domain.models.api.Post
 import com.example.domain.models.api.SavedPost
-import com.example.vknewsfeed.NewsMainViewModel
+import com.example.vknewsfeed.MainViewModel
 import com.example.vknewsfeed.R
 import com.example.vknewsfeed.newsfeed.adapters.newsfeed.NewsfeedPageKeyedDataSource
 import com.example.vknewsfeed.routers.AppRouter
@@ -18,24 +20,25 @@ import okhttp3.MultipartBody
 class NewsfeedViewModel(
     private val postInteractor: PostInteractor,
     private val router: AppRouter,
-    private val dataSource: NewsfeedPageKeyedDataSource
-) : NewsMainViewModel(postInteractor) {
-    var isLoadingPosts = true
+    private val dataSource: NewsfeedPageKeyedDataSource,
+    val items: PagedList<Post>
+) : MainViewModel(postInteractor) {
     val mutableLoading = MutableLiveData<Boolean>()
+    val mutablePosts = MutableLiveData<PagedList<Post>>()
 
     init {
-//        subscribeOnLoading()
+        subscribeOnLoading()
     }
 
-    suspend fun createPost(photo: MultipartBody.Part?, message: String): SavedPost {
-        return withContext(Dispatchers.IO) { postInteractor.createPost(photo, message) }
+    private suspend fun createPost(photo: MultipartBody.Part?, message: String): SavedPost {
+        return withContext(coroutineContext) { postInteractor.createPost(photo, message) }
     }
 
     private fun subscribeOnLoading() {
         viewModelScope.launch {
             dataSource.loadingProgress.consumeEach { isLoading ->
-                isLoadingPosts = isLoading
                 mutableLoading.postValue(isLoading)
+                mutablePosts.postValue(items)
             }
         }
     }
@@ -51,10 +54,6 @@ class NewsfeedViewModel(
         router.openDetailFragment(postId, sourceId)
     }
 
-    fun logout() {
-        router.openAuthActivity()
-    }
-
     fun createPostAndShow(attachPhoto: MultipartBody.Part?, message: String) {
         viewModelScope.launch(coroutineContext) {
             router.showProgressBar()
@@ -62,5 +61,27 @@ class NewsfeedViewModel(
             router.hideProgressBar()
             openDetailFragment(Constants.USER_ID, postId)
         }
+    }
+
+    fun updateLikes(bundle: Bundle) {
+        val postId = bundle.getInt(Constants.INTENT_POST_ID, 0)
+        val likeCount = bundle.getInt(Constants.INTENT_LIKE_COUNT, 0)
+        val userLike = bundle.getInt(Constants.INTENT_USER_LIKE, 0)
+        items.forEach { item ->
+            if (item.postId == postId) {
+                item.likes.count = likeCount
+                item.likes.userLikes = userLike
+                mutableItemAfterLike.postValue(item)
+                return
+            }
+        }
+    }
+
+    fun logout() {
+        router.openAuthActivity()
+    }
+
+    fun setFilterType(type: String) {
+        postInteractor.setFilterType(type)
     }
 }

@@ -1,12 +1,11 @@
 package com.example.vknewsfeed.detail
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.domain.PostInteractor
 import com.example.domain.helpers.Constants
 import com.example.domain.models.api.Post
-import com.example.vknewsfeed.NewsMainViewModel
+import com.example.vknewsfeed.MainViewModel
 import com.example.vknewsfeed.routers.AppRouter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -14,7 +13,7 @@ import kotlinx.coroutines.withContext
 class DetailViewModel(
     private val postInteractor: PostInteractor,
     private val router: AppRouter
-) : NewsMainViewModel(postInteractor) {
+) : MainViewModel(postInteractor) {
     val mutableDetailPost = MutableLiveData<Post?>()
 
     suspend fun getPostById(sourceId: Int, postId: Int) =

@@ -10,7 +10,7 @@ class ApiConstInterceptor : Interceptor {
         val original = chain.request()
         return original.url().newBuilder()
             .addQueryParameter("access_token", Constants.TOKEN)
-            .addQueryParameter("v", Constants.api)
+            .addQueryParameter("v", BuildConfig.API_VERSION)
             .build()
             .let {
                 chain.proceed(original.newBuilder().url(it).build())

@@ -9,7 +9,7 @@ import com.example.domain.models.api.*
 import okhttp3.MultipartBody
 
 class ApiRepositoryImpl(
-    val vkApi: VKApi
+    private val vkApi: VKApi
 ) : ApiRepository {
 
     override suspend fun setLike(post: Post) =
@@ -26,19 +26,19 @@ class ApiRepositoryImpl(
             itemId = post.postId
         ).response.likes
 
-    private suspend fun getVideoByIdRequest(videoId: String): ResponseVideo =
-        vkApi.getVideoById(videoId)
-
     override suspend fun getVideoById(videoId: String): ResponseVideo =
         vkApi.getVideoById(videoId)
 
-    override suspend fun getNewsfeed(requestedLoadSize: Int): Newsfeed? =
+    override suspend fun getNewsfeed(requestedLoadSize: Int): Newsfeed =
         vkApi.getResponseNewsfeed(
             filters = Constants.FILTERS_FOR_NEWS,
             count = requestedLoadSize.toString()
         ).response
 
-    override suspend fun getNextNewsfeed(key: String, requestedLoadSize: Int): Newsfeed =
+    override suspend fun getNextNewsfeed(
+        key: String,
+        requestedLoadSize: Int
+    ): Newsfeed =
         vkApi.getNextResponseNewsfeed(
             filters = Constants.FILTERS_FOR_NEWS,
             count = requestedLoadSize.toString(),

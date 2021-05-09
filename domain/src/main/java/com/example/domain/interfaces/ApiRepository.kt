@@ -11,7 +11,7 @@ interface ApiRepository {
 
     suspend fun deleteLike(post: Post): Int
 
-    suspend fun getNewsfeed(requestedLoadSize: Int): Newsfeed?
+    suspend fun getNewsfeed(requestedLoadSize: Int): Newsfeed
 
     suspend fun getNextNewsfeed(key: String, requestedLoadSize: Int): Newsfeed
 
