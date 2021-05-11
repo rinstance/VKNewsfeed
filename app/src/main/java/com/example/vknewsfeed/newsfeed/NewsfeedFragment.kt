@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.domain.helpers.Constants
 import com.example.domain.models.api.Post
 import com.example.vknewsfeed.App
@@ -251,14 +250,14 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
 
     private fun updateAdapterAfterLike() {
         model.mutableItemAfterLike.observe(viewLifecycleOwner, Observer { post: Post ->
-            adapter.notifyItemChanged(model.items.indexOf(post))
+            adapter.notifyItemChanged(model.posts.indexOf(post))
         })
     }
 
     private fun setAdapter() {
         setLoadingProgressBar()
         setAdapterList()
-        adapter.submitList(model.items)
+        adapter.submitList(model.posts)
         newsfeed_recyclerview.adapter = adapter
     }
 

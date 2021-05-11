@@ -16,15 +16,17 @@ import com.example.vknewsfeed.routers.AppRouter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.consumeEach
 import okhttp3.MultipartBody
+import javax.inject.Provider
 
 class NewsfeedViewModel(
     private val postInteractor: PostInteractor,
     private val router: AppRouter,
     private val dataSource: NewsfeedPageKeyedDataSource,
-    val items: PagedList<Post>
+    private val provider: Provider<PagedList<Post>>
 ) : MainViewModel(postInteractor) {
     val mutableLoading = MutableLiveData<Boolean>()
     val mutablePosts = MutableLiveData<PagedList<Post>>()
+    var posts: PagedList<Post> = provider.get()
 
     init {
         subscribeOnLoading()
@@ -38,7 +40,7 @@ class NewsfeedViewModel(
         viewModelScope.launch {
             dataSource.loadingProgress.consumeEach { isLoading ->
                 mutableLoading.postValue(isLoading)
-                mutablePosts.postValue(items)
+                mutablePosts.postValue(posts)
             }
         }
     }
@@ -67,7 +69,7 @@ class NewsfeedViewModel(
         val postId = bundle.getInt(Constants.INTENT_POST_ID, 0)
         val likeCount = bundle.getInt(Constants.INTENT_LIKE_COUNT, 0)
         val userLike = bundle.getInt(Constants.INTENT_USER_LIKE, 0)
-        items.forEach { item ->
+        posts.forEach { item ->
             if (item.postId == postId) {
                 item.likes.count = likeCount
                 item.likes.userLikes = userLike
@@ -83,5 +85,11 @@ class NewsfeedViewModel(
 
     fun setFilterType(type: String) {
         postInteractor.setFilterType(type)
+        updateList()
+    }
+
+    private fun updateList() {
+        posts = provider.get()
+        mutablePosts.postValue(posts)
     }
 }

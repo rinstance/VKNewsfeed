@@ -13,6 +13,7 @@ import dagger.Module
 import dagger.Provides
 import java.util.concurrent.Executors
 import javax.inject.Named
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module

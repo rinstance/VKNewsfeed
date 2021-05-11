@@ -14,6 +14,7 @@ import com.example.vknewsfeed.routers.AppRouter
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
+import javax.inject.Provider
 
 @Module(includes = [ViewModelModule::class])
 class NewsfeedViewModelModule {
@@ -25,9 +26,9 @@ class NewsfeedViewModelModule {
         postInteractor: PostInteractor,
         router: AppRouter,
         dataSource: NewsfeedPageKeyedDataSource,
-        items: PagedList<Post>
+        provider: Provider<PagedList<Post>>
     ): MainViewModel {
-        return NewsfeedViewModel(postInteractor, router, dataSource, items)
+        return NewsfeedViewModel(postInteractor, router, dataSource, provider)
     }
 
     @Provides

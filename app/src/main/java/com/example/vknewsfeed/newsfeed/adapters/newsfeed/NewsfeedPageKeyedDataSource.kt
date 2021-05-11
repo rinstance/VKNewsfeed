@@ -1,5 +1,6 @@
 package com.example.vknewsfeed.newsfeed.adapters.newsfeed
 
+import android.util.Log
 import androidx.paging.PageKeyedDataSource
 import com.example.domain.PostInteractor
 import com.example.domain.models.api.Newsfeed
@@ -41,6 +42,7 @@ class NewsfeedPageKeyedDataSource(
 
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, Post>) {
         initialCallback = callback
+        isInitialLoading = true
         launch(coroutineContext) {
             showLoadingProgressBar()
             val newsfeed = postInteractor.getNewsfeed(params.requestedLoadSize)
