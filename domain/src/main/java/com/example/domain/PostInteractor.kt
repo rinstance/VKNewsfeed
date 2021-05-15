@@ -11,11 +11,12 @@ import com.example.domain.models.db.PostLocal
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import okhttp3.MultipartBody
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 const val requestDelayMillis: Long = 400
 
-class PostInteractor(
+class PostInteractor @Inject constructor(
     private val apiRepository: ApiRepository,
     private val databaseRepository: DatabaseRepository,
     private val preference: SharedPreferences
@@ -112,9 +113,21 @@ class PostInteractor(
     private suspend fun wallPost(message: String, attachments: String): SavedPost =
         apiRepository.wallPost(message, attachments)
 
-    suspend fun setLike(post: Post): Int = apiRepository.setLike(post)
+    suspend fun setLike(post: Post): Int {
+        val likes: Likes? = apiRepository.setLike(post)
+        return if (likes?.likes == null) {
+            delay(requestDelayMillis)
+            setLike(post)
+        } else likes.likes
+    }
 
-    suspend fun deleteLike(post: Post): Int = apiRepository.deleteLike(post)
+    suspend fun deleteLike(post: Post): Int {
+        val likes: Likes? = apiRepository.deleteLike(post)
+        return if (likes?.likes == null) {
+            delay(requestDelayMillis)
+            deleteLike(post)
+        } else likes.likes
+    }
 
     suspend fun getPostById(posts: String): List<Post> {
         val response = apiRepository.getPostById(posts).response

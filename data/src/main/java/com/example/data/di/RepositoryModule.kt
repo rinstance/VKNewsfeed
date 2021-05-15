@@ -7,20 +7,18 @@ import com.example.data.repository.db.PostCacheDao
 import com.example.data.repository.db.PostLocalDao
 import com.example.domain.interfaces.ApiRepository
 import com.example.domain.interfaces.DatabaseRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class RepositoryModule {
-    @Provides
+interface RepositoryModule {
+    @Binds
     @Singleton
-    fun provideApiRepository(vkApi: VKApi): ApiRepository = ApiRepositoryImpl(vkApi)
+    fun provideApiRepository(impl: ApiRepositoryImpl): ApiRepository
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideDbRepository(
-        postLocalDao: PostLocalDao,
-        postCacheDao: PostCacheDao
-    ): DatabaseRepository = DatabaseRepositoryImpl(postLocalDao, postCacheDao)
+    fun provideDbRepository(impl: DatabaseRepositoryImpl): DatabaseRepository
 }

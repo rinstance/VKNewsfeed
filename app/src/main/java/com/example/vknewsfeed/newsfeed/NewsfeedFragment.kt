@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -43,6 +44,7 @@ import kotlin.coroutines.CoroutineContext
 
 private const val REQUEST_CHOOSE_IMAGE = 1
 private const val REQUEST_CODE_PERMISSION_READ_CONTACTS = 2
+private const val NEWSFEED_POSITION = "news_posiiton"
 
 class NewsfeedFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
@@ -53,14 +55,25 @@ class NewsfeedFragment : Fragment(), CoroutineScope {
     @Inject lateinit var model: NewsfeedViewModel
     @Inject lateinit var adapter: NewsfeedAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupDI()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_newsfeed, container, false)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setupDI()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        newsfeed_recyclerview?.layoutManager?.onRestoreInstanceState(
+            model.saveBundle.getParcelable(NEWSFEED_POSITION))
+    }
+
+    override fun onDestroyView() {
+        model.saveBundle.putParcelable(NEWSFEED_POSITION, newsfeed_recyclerview?.layoutManager?.onSaveInstanceState())
+        super.onDestroyView()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

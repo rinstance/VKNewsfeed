@@ -4,8 +4,9 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.util.Log
 import com.example.domain.helpers.Constants
+import javax.inject.Inject
 
-class MainInteractor(
+class MainInteractor @Inject constructor(
     private val preferences: SharedPreferences
 ) {
     fun setStartData(): Boolean {

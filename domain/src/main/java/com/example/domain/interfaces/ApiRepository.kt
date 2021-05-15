@@ -7,9 +7,9 @@ import okhttp3.MultipartBody
 
 interface ApiRepository {
 
-    suspend fun setLike(post: Post): Int
+    suspend fun setLike(post: Post): Likes
 
-    suspend fun deleteLike(post: Post): Int
+    suspend fun deleteLike(post: Post): Likes
 
     suspend fun getNewsfeed(requestedLoadSize: Int): Newsfeed
 

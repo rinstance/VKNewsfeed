@@ -10,14 +10,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 import kotlin.coroutines.CoroutineContext
 
 class NewsfeedPageKeyedDataSource(
-        private val postInteractor: PostInteractor
+    private val postInteractor: PostInteractor
 ) : PageKeyedDataSource<String, Post>(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = SupervisorJob() + Dispatchers.IO
-    val loadingProgress = Channel<Boolean>()
+    val loading = Channel<Boolean>()
     private var isInitialLoading = true
     private lateinit var initialCallback: LoadInitialCallback<String, Post>
     private lateinit var nextCallback: LoadCallback<String, Post>
@@ -26,9 +27,9 @@ class NewsfeedPageKeyedDataSource(
 //        EspressoIdlingResource.increment() //for test
     }
 
-    private suspend fun showLoadingProgressBar() = loadingProgress.send(true)
+    private suspend fun showLoading() = loading.send(true)
 
-    private suspend fun hideLoadingProgressBar() = loadingProgress.send(false)
+    private suspend fun hideLoading() = loading.send(false)
 
     private fun showNews(newsfeeed: Newsfeed, items: List<Post>) {
         if (isInitialLoading) {
@@ -44,21 +45,21 @@ class NewsfeedPageKeyedDataSource(
         initialCallback = callback
         isInitialLoading = true
         launch(coroutineContext) {
-            showLoadingProgressBar()
+            showLoading()
             val newsfeed = postInteractor.getNewsfeed(params.requestedLoadSize)
             showNews(newsfeed, newsfeed.posts)
-            hideLoadingProgressBar()
+            hideLoading()
         }
     }
 
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Post>) {
         nextCallback = callback
         launch(coroutineContext) {
-            showLoadingProgressBar()
+            showLoading()
             val newsfeed =
                 postInteractor.getNextNewsfeed(params.key, params.requestedLoadSize)
             showNews(newsfeed, newsfeed.posts)
-            hideLoadingProgressBar()
+            hideLoading()
         }
     }
 

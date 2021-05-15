@@ -7,8 +7,9 @@ import com.example.domain.models.api.video.ResponseVideo
 import com.example.domain.interfaces.ApiRepository
 import com.example.domain.models.api.*
 import okhttp3.MultipartBody
+import javax.inject.Inject
 
-class ApiRepositoryImpl(
+class ApiRepositoryImpl @Inject constructor(
     private val vkApi: VKApi
 ) : ApiRepository {
 
@@ -17,14 +18,14 @@ class ApiRepositoryImpl(
             type = Constants.LIKE_TYPE,
             ownerId = post.sourceId,
             itemId = post.postId
-        ).response.likes
+        ).response
 
     override suspend fun deleteLike(post: Post) =
         vkApi.deleteLike(
             type = Constants.LIKE_TYPE,
             ownerId = post.sourceId,
             itemId = post.postId
-        ).response.likes
+        ).response
 
     override suspend fun getVideoById(videoId: String): ResponseVideo =
         vkApi.getVideoById(videoId)

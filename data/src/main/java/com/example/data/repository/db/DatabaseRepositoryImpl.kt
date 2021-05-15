@@ -7,8 +7,9 @@ import com.example.domain.interfaces.DatabaseRepository
 import com.example.domain.models.api.Post
 import com.example.domain.models.db.PostLocal
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class DatabaseRepositoryImpl(
+class DatabaseRepositoryImpl @Inject constructor(
     private val postLocalDao: PostLocalDao,
     private val postCacheDao: PostCacheDao
 ) : DatabaseRepository {

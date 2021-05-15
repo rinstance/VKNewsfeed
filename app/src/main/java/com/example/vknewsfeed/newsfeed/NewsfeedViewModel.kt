@@ -1,7 +1,6 @@
 package com.example.vknewsfeed.newsfeed
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagedList
@@ -24,6 +23,7 @@ class NewsfeedViewModel(
     private val dataSource: NewsfeedPageKeyedDataSource,
     private val provider: Provider<PagedList<Post>>
 ) : MainViewModel(postInteractor) {
+    val saveBundle = Bundle()
     val mutableLoading = MutableLiveData<Boolean>()
     val mutablePosts = MutableLiveData<PagedList<Post>>()
     var posts: PagedList<Post> = provider.get()
@@ -38,7 +38,7 @@ class NewsfeedViewModel(
 
     private fun subscribeOnLoading() {
         viewModelScope.launch {
-            dataSource.loadingProgress.consumeEach { isLoading ->
+            dataSource.loading.consumeEach { isLoading ->
                 mutableLoading.postValue(isLoading)
                 mutablePosts.postValue(posts)
             }
