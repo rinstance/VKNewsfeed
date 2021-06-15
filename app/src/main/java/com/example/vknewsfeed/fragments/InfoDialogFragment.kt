@@ -51,10 +51,6 @@ class InfoDialogFragment : DialogFragment() {
         cancelButton.setOnClickListener { dismiss() }
     }
 
-//    fun setOKListener(listener: () -> Unit) {
-//        this.listener = listener
-//    }
-
     private fun initView(view: View) {
         cancelButton = view.findViewById(R.id.button_cancel)
         okButton = view.findViewById(R.id.button_ok)

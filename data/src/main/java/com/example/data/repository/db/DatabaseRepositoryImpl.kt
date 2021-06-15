@@ -18,9 +18,6 @@ class DatabaseRepositoryImpl @Inject constructor(
         postLocalDao.getAll(userId)
 
     override suspend fun savePost(post: Post, userId: Int?) {
-//        userId?.let {
-//            FirebaseDatabase.getInstance().getReference("posts").setValue(mapPostToPostLocal(post, userId))
-//        }
         userId?.let {
             postLocalDao.insertPost(mapPostToPostLocal(post, userId))
         }

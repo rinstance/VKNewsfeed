@@ -1,7 +1,6 @@
 package com.example.domain.models.db
 
 import androidx.room.*
-import com.example.domain.converters.AttachmentIdConverter
 
 @Entity
 data class PostLocal(
